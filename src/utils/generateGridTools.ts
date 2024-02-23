@@ -220,6 +220,30 @@ export function attemptToPlaceWordOnGrid(
     return grid[y][x] !== EMPTYCELL;
   }
 
+  // // Возвращает количество пересечений слов в сетке
+  // function getIntersections() {
+  //   let intersections = 0;
+  //   for (let row = 0; row < GRIDSIZE; row++) {
+  //     for (let column = 0; column < GRIDSIZE; column++) {
+  //       if (isLetter(row, column)) {
+  //         if (
+  //           isValidPosition(row - 1, column) &&
+  //           isValidPosition(row + 1, column) &&
+  //           isValidPosition(row, column - 1) &&
+  //           isValidPosition(row, column + 1) &&
+  //           isLetter(row - 1, column) &&
+  //           isLetter(row + 1, column) &&
+  //           isLetter(row, column - 1) &&
+  //           isLetter(row, column + 1)
+  //         ) {
+  //           ++intersections;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return intersections;
+  // }
+
   // пытаемся разместить слово в сетке ===================
 
   // проходим по каждой букве в слове
@@ -254,7 +278,6 @@ export function attemptToPlaceWordOnGrid(
               : placedWord.posX;
 
           if (isLetter(y, x)) {
-            // if (isLetter(placedWord.posY, placedWord.posX)) {
             if (updateGrid()) {
               return true;
             }

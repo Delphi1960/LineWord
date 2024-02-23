@@ -1,6 +1,6 @@
 // import {WordsList} from '../assets/data/words';
-import {WordsList} from '../assets/data/russian_nouns';
-// import {WordsList} from '../assets/data/refined_crossword_words';
+// import {WordsList} from '../assets/data/russian_nouns';
+import {WordsList} from '../assets/data/cleaned_nouns_ru';
 
 import {EMPTYCELL, GRIDSIZE} from '../types/constants';
 import {GridType} from '../types/data.type';
@@ -9,7 +9,6 @@ import {storage} from './storage';
 
 export function generateGrid() {
   const chapter = storage.getString('@chapter');
-  console.log({chapter});
   // число кнопок
   const NUMBER_BUTTON = Number(chapter) + 3;
 
@@ -106,7 +105,9 @@ export function generateGrid() {
   // ];
 
   // Удаление повторов и перевод в верхний регистр
-  const words = [...new Set(WordsList.map(word => word.toUpperCase()))];
+  const newWords: string[] = WordsList.map(item => item.word);
+  const words = [...new Set(newWords.map(word => word.toUpperCase()))];
+  console.log(words.length);
 
   let randomWord: string = '';
   let workWords: string[] = [];
@@ -120,6 +121,8 @@ export function generateGrid() {
     // удалим центральное слово, чтобы не повторялось
     const filteredWords = words.filter(word => word !== randomWord);
     workWords = getWordsForLetters(letterButtons, filteredWords);
+    // Сортируем слова по убыванию длины
+    workWords = workWords.sort((a, b) => b.length - a.length);
     console.log(workWords);
   }
 
@@ -134,15 +137,17 @@ export function generateGrid() {
   let maxCount = 0;
   let wordUsed: string[] = [];
   let maxWordUsed: string[] = []; //слова использованные в кроссворде
-  let shuffledWords: string[] = [];
+  let placedWords: string[] = [];
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 10; i++) {
     const newGrid = grid.map(innerArray => innerArray.slice());
-    shuffledWords = shuffleArray(workWords);
+    placedWords = workWords.slice(); // Копируем массив workWords
+    // placedWords = shuffleArray(workWords);
+
     wordUsed = [];
     let count: number = 0;
-    while (shuffledWords.length > 0) {
-      let word: string | undefined = shuffledWords.pop(); // извлекаем и удаляем последнее слово из списка
+    while (placedWords.length > 0) {
+      let word: string | undefined = placedWords.pop(); // извлекаем и удаляем последнее слово из списка
       if (word) {
         if (attemptToPlaceWordOnGrid(newGrid, word)) {
           count++;
@@ -158,6 +163,7 @@ export function generateGrid() {
       maxWordUsed = wordUsed.map(innerArray => innerArray.slice());
       maxWordUsed.push(randomWord); //первое слово кроссворда
     }
+    // console.log({count, maxCount});
   }
   // console.log(workWords);
 
@@ -171,21 +177,22 @@ export function generateGrid() {
       unusedWords.push(workWords[i]);
     }
   }
-  console.log(randomWord, workWords);
-  console.log(
-    `${maxWordUsed.length - 1} из ${
-      workWords.length
-    } Не вошли ${unusedWords} из ${workWords}`,
-  );
-
+  // console.log(randomWord, workWords);
+  // console.log(
+  //   `${maxWordUsed.length - 1} из ${
+  //     workWords.length
+  //   } Не вошли ${unusedWords} из ${workWords}`,
+  // );
+  // console.log(maxWordUsed);
   // SAVE ============================================================================
 
   storage.set('@wordUsed', JSON.stringify(maxWordUsed));
 
   storage.set('@lineword', JSON.stringify(bestGrid));
 
-  const solvedGrid = Array.from({length: GRIDSIZE}, () =>
-    Array(GRIDSIZE).fill(EMPTYCELL),
+  // заменим буквы нулями, чтобы потом понимать, что разгадано. "1"-разгадано
+  const solvedGrid: string[][] = bestGrid.map(row =>
+    row.map(cell => (cell === EMPTYCELL ? EMPTYCELL : '0')),
   );
 
   storage.set('@solvedLineword', JSON.stringify(solvedGrid));

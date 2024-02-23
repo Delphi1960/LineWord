@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {TouchableOpacity, Image, StyleSheet, Animated} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {LINEWORD_CIRCLE_BUTTON_SIZE} from '../../types/constants';
 import {useMMKVObject} from 'react-native-mmkv';
@@ -11,11 +11,28 @@ type Props = {
 };
 
 export default function CenterButton({buttons}: Props) {
-  const [buttonSize, setButtonSize] = useState<number>(
-    LINEWORD_CIRCLE_BUTTON_SIZE,
-  );
-
   const [, setLettersButtons] = useMMKVObject<string[]>('@circleButton');
+  const [animation] = useState(new Animated.Value(1));
+
+  const pulseButton = () => {
+    Animated.sequence([
+      Animated.timing(animation, {
+        toValue: 0.5,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animation, {
+        toValue: 1.5,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
 
   // Перемешать буквы на кнопках
   function shuffleLetters(arr: CircleButtonType[]): CircleButtonType[] {
@@ -26,13 +43,14 @@ export default function CenterButton({buttons}: Props) {
       const j = Math.floor(Math.random() * (i + 1));
       [letters[i], letters[j]] = [letters[j], letters[i]];
     }
+
     // Заменяем буквы в исходном массиве на перетасованные
     return arr.map((obj, index) => ({...obj, button: letters[index]}));
   }
 
   //onPress на центральную кнопку для перемешивания букв
   const handleCenterButton = () => {
-    setButtonSize(LINEWORD_CIRCLE_BUTTON_SIZE * 2);
+    pulseButton();
     const timer = setInterval(() => {
       const shuffledButtons = shuffleLetters(buttons);
       storage.set('@buttonsState', JSON.stringify(shuffledButtons));
@@ -41,19 +59,14 @@ export default function CenterButton({buttons}: Props) {
       setLettersButtons(letters);
 
       clearInterval(timer);
-      setButtonSize(LINEWORD_CIRCLE_BUTTON_SIZE);
     }, 250);
   };
 
   const styles = StyleSheet.create({
     image: {
-      width: buttonSize, // Set the width of your image
-      height: buttonSize, // Set the height of your image
+      width: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the width of your image
+      height: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the height of your image
     },
-    // image: {
-    //   width: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the width of your image
-    //   height: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the height of your image
-    // },
 
     centerButton: {
       width: 40,
@@ -66,12 +79,16 @@ export default function CenterButton({buttons}: Props) {
   });
 
   return (
-    <TouchableOpacity style={styles.centerButton} onPress={handleCenterButton}>
-      <Image
-        source={CustomButton.shuffle}
-        style={styles.image}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
+    <Animated.View style={{transform: [{scale: animation}]}}>
+      <TouchableOpacity
+        style={styles.centerButton}
+        onPress={handleCenterButton}>
+        <Image
+          source={CustomButton.shuffle}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </Animated.View>
   );
 }

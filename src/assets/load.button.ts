@@ -1,6 +1,4 @@
 const CustomButton = {
-  key: require('./button/key.png'),
-  key1: require('./button/key1.png'),
   l2: require('./button/l2.png'),
   shuffle: require('./button/shuffle.png'),
   buttonOff: require('./button/buttonOff.png'),
@@ -16,5 +14,8 @@ const CustomButton = {
   bonus: require('./button/bonus.png'),
   grid: require('./button/grid.png'),
   label: require('./button/label.png'),
+  labelNext: require('./button/labelNext.png'),
+  progress1: require('./button/progress1.png'),
+  progress2: require('./button/progress2.png'),
 };
 export default CustomButton;

@@ -1,12 +1,14 @@
-import type {GridType} from '../types/data.type';
+import type {GridType, LetterPos} from '../types/data.type';
 import {storage} from './storage';
 
 type SolvedGridType = {
   solvedGrid: GridType;
   solved: boolean;
+  wordCoord: LetterPos[];
 };
 export namespace LinewordTools {
   // Пометить слово, как разгаданное
+
   export function markSolvedWord(
     mainGrid: GridType,
     duplicatemainGrid: GridType,
@@ -15,6 +17,8 @@ export namespace LinewordTools {
     const numRows = mainGrid.length;
     const numCols = mainGrid[0].length;
     let wordFound = false;
+    // координаты помечаемого слова. Нужны для анимации буквы
+    let wordCoord: LetterPos[] = [];
 
     // Поиск слова по горизонтали
     for (let row = 0; row < numRows; row++) {
@@ -38,6 +42,7 @@ export namespace LinewordTools {
             wordFound = true;
             for (let i = 0; i < word.length; i++) {
               duplicatemainGrid[row][col + i] = '1';
+              wordCoord.push({y: row, x: col + i});
             }
           }
         }
@@ -66,6 +71,7 @@ export namespace LinewordTools {
             wordFound = true;
             for (let i = 0; i < word.length; i++) {
               duplicatemainGrid[row + i][col] = '1';
+              wordCoord.push({y: row + i, x: col});
             }
           }
         }
@@ -75,14 +81,15 @@ export namespace LinewordTools {
     // return duplicatemainGrid;
     // return wordFound ? duplicatemainGrid : null;
     // return wordFound ? true : false;
-    return {solved: wordFound, solvedGrid: duplicatemainGrid};
+    return {solved: wordFound, solvedGrid: duplicatemainGrid, wordCoord};
   }
 
   // Открыть одну случайную букву
   export function markSolvedLetter(
     mainGrid: GridType,
     duplicatemainGrid: GridType,
-  ) {
+  ): LetterPos[] | undefined {
+    let result: LetterPos[] = [];
     // Функция для нахождения всех позиций букв в сетке, которые еще не открыты
     function findUnopenedLetterPositions(): [number, number][] {
       const positions: [number, number][] = [];
@@ -112,9 +119,11 @@ export namespace LinewordTools {
 
       // Установить значение "1" в solvedGrid на выбранной позиции
       duplicatemainGrid[row][col] = '1';
+      result.push({y: row, x: col});
     }
 
     storage.set('@solvedLineword', JSON.stringify(duplicatemainGrid));
+    return result;
   }
 
   export function openLetter(
@@ -138,4 +147,76 @@ export namespace LinewordTools {
     });
     return maxWord;
   }
+
+  // export function findWordCoordinates(
+  //   grid: GridType,
+  //   word: string,
+  // ): LetterPos[] | null {
+  //   const wordLength: number = word.length;
+  //   const numRows: number = grid.length;
+  //   const numCols: number = grid[0].length;
+  //   let coordinates: LetterPos[] = [];
+
+  //   // Проходим по всем элементам массива
+  //   for (let row: number = 0; row < numRows; row++) {
+  //     for (let col: number = 0; col < numCols; col++) {
+  //       // Если текущий элемент соответствует первой букве искомого слова
+  //       if (grid[row][col] === word[0]) {
+  //         // Проверяем, есть ли слово вправо
+  //         if (col + wordLength <= numCols) {
+  //           let found: boolean = true;
+  //           // Проверяем, совпадает ли каждая буква слова с элементами массива вправо
+  //           coordinates = [{y: row, x: col}];
+  //           for (let i: number = 1; i < wordLength; i++) {
+  //             if (grid[row][col + i] !== word[i]) {
+  //               found = false;
+  //               break;
+  //             }
+  //             coordinates.push({y: row, x: col + i});
+  //           }
+  //           if (found) {
+  //             return coordinates;
+  //           }
+  //         }
+
+  //         // Проверяем, есть ли слово вниз
+  //         if (row + wordLength <= numRows) {
+  //           let found: boolean = true;
+  //           // Проверяем, совпадает ли каждая буква слова с элементами массива вниз
+  //           coordinates = [{y: row, x: col}];
+  //           for (let i: number = 1; i < wordLength; i++) {
+  //             if (grid[row + i][col] !== word[i]) {
+  //               found = false;
+  //               break;
+  //             }
+  //             coordinates.push({y: row + i, x: col});
+  //           }
+  //           if (found) {
+  //             return coordinates;
+  //           }
+  //         }
+
+  //         // Проверяем, есть ли слово по диагонали вниз и вправо
+  //         if (col + wordLength <= numCols && row + wordLength <= numRows) {
+  //           let found: boolean = true;
+  //           // Проверяем, совпадает ли каждая буква слова с элементами массива по диагонали вниз и вправо
+  //           coordinates = [{y: row, x: col}];
+  //           for (let i: number = 1; i < wordLength; i++) {
+  //             if (grid[row + i][col + i] !== word[i]) {
+  //               found = false;
+  //               break;
+  //             }
+  //             coordinates.push({y: row + i, x: col + i});
+  //           }
+  //           if (found) {
+  //             return coordinates;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   // Если слово не найдено
+  //   return null;
+  // }
 }

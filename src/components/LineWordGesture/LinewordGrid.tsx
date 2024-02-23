@@ -1,11 +1,18 @@
-import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {Text} from 'react-native';
-import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import CustomButton from '../../assets/load.button';
 import {LinewordTools} from '../../utils/LinewordTools';
+import {LetterPos} from '../../types/data.type';
 
 export function LinewordGrid() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
@@ -14,21 +21,55 @@ export function LinewordGrid() {
 
   const [showGrid] = useMMKVBoolean('@showGrid');
 
-  // const [buttonSize, setButtonSize] = useState(LINEWORD_BUTTON_SIZE);
+  const [buttonAnimation] = useState(
+    grid!.map(row => row.map(item => new Animated.Value(1))),
+  );
+  const [lastWord] = useMMKVString('@lastWord');
+  const [coordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
 
   function openLetter(rowIndex: number, colIndex: number) {
-    // const timer = setInterval(() => {
-    //   setButtonSize(LINEWORD_BUTTON_SIZE / 3);
-    //   clearInterval(timer);
-    //   setButtonSize(LINEWORD_BUTTON_SIZE);
-    // }, 1000);
     LinewordTools.openLetter(rowIndex, colIndex, solvedGrid!);
   }
 
+  const pulseButton = (rowIndex: number, colIndex: number) => {
+    Animated.sequence([
+      Animated.timing(buttonAnimation[rowIndex][colIndex], {
+        // используем анимацию для конкретной кнопки в гриде
+        toValue: 0.8,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(buttonAnimation[rowIndex][colIndex], {
+        toValue: 1.5,
+        duration: 200,
+        useNativeDriver: false,
+      }),
+      Animated.timing(buttonAnimation[rowIndex][colIndex], {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  useEffect(() => {
+    if (coordWord !== undefined) {
+      if (coordWord !== null) {
+        coordWord!.forEach((coord, index) => {
+          setTimeout(() => {
+            pulseButton(coord.y, coord.x);
+          }, 200 * index);
+        });
+      }
+    }
+  }, [coordWord, lastWord, solvedGrid]);
+
   const styles = StyleSheet.create({
     gridContainer: {
+      flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
+      marginTop: 20,
     },
     row: {
       flexDirection: 'row',
@@ -37,8 +78,6 @@ export function LinewordGrid() {
       width: LINEWORD_BUTTON_SIZE,
       height: LINEWORD_BUTTON_SIZE,
       borderWidth: 1,
-      // borderColor: 'grey',
-      // borderColor: 'transparent',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -61,7 +100,8 @@ export function LinewordGrid() {
     },
     text: {
       position: 'absolute',
-      // top: 10, // Adjust top position of text as needed
+      top: 4, // Adjust top position of text as needed
+      marginLeft: 10,
       color: 'black', // Text color
       fontSize: 22, // Text size
       fontWeight: 'bold',
@@ -94,20 +134,32 @@ export function LinewordGrid() {
                 <TouchableOpacity
                   key={colIndex}
                   style={styles.button}
-                  onPress={() => openLetter(rowIndex, colIndex)}
+                  onPress={() => {
+                    pulseButton(rowIndex, colIndex);
+                    openLetter(rowIndex, colIndex);
+                  }}
                   disabled={false}>
-                  <Image
-                    source={
-                      solvedGrid![rowIndex][colIndex] === '1'
-                        ? CustomButton.buttonYellow
-                        : CustomButton.buttonGrey
-                    }
-                    style={styles.image}
-                    resizeMode="stretch"
-                  />
-                  {solvedGrid![rowIndex][colIndex] === '1' ? (
-                    <Text style={styles.text}>{cell}</Text>
-                  ) : null}
+                  <Animated.View
+                    style={[
+                      {
+                        transform: [
+                          {scale: buttonAnimation[rowIndex][colIndex]},
+                        ],
+                      },
+                    ]}>
+                    <Image
+                      source={
+                        solvedGrid![rowIndex][colIndex] === '1'
+                          ? CustomButton.buttonYellow
+                          : CustomButton.buttonGrey
+                      }
+                      style={styles.image}
+                      resizeMode="stretch"
+                    />
+                    {solvedGrid![rowIndex][colIndex] === '1' ? (
+                      <Text style={styles.text}>{cell}</Text>
+                    ) : null}
+                  </Animated.View>
                 </TouchableOpacity>
               ) : null}
             </View>

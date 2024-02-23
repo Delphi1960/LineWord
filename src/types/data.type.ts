@@ -49,3 +49,8 @@ export interface WordStatus {
   posY: number;
   direction: 'horizontal' | 'vertical';
 }
+
+export interface LetterPos {
+  y: number;
+  x: number;
+}

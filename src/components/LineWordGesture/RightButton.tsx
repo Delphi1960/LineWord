@@ -4,6 +4,8 @@ import CustomButton from '../../assets/load.button';
 import InfoModal from '../supporting/InfoModal';
 import {LinewordTools} from '../../utils/LinewordTools';
 import {useMMKVObject} from 'react-native-mmkv';
+import {storage} from '../../utils/storage';
+import {LetterPos} from '../../types/data.type';
 
 export default function RightButton() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
@@ -20,7 +22,11 @@ export default function RightButton() {
   // Modal Open letter
   const showLetter = () => {
     setShow(false);
-    LinewordTools.markSolvedLetter(grid!, solvedGrid!);
+    let letterPos: LetterPos[] = LinewordTools.markSolvedLetter(
+      grid!,
+      solvedGrid!,
+    )!;
+    storage.set('@lastWordPos', JSON.stringify(letterPos));
   };
 
   return (

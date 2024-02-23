@@ -90,6 +90,9 @@ let polyLine: LinePath[] = [];
 //
 
 // ===================================================================================
+// type Props = {
+//   navigation: any;
+// };
 
 export default function CircleButtonsGesture() {
   const [lettersButtons] = useMMKVObject<string[]>('@circleButton');
@@ -110,14 +113,31 @@ export default function CircleButtonsGesture() {
   const [selLetterOrder, setSelLetterOrder] =
     useMMKVObject<number[]>('@arrayOrder');
 
+  const [animation] = useState(new Animated.Value(1));
+
   useEffect(() => {
+    const pulseButton = () => {
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 0.8,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    };
     if (buttonsState!.length === 0) {
       storage.set(
         '@buttonsState',
         JSON.stringify(setPosButtons(lettersButtons!)),
       );
     }
-  }, [buttonsState, lettersButtons]);
+    pulseButton();
+  }, [animation, buttonsState, lettersButtons]);
 
   function setPolyLine(arrayInd: number[]): LinePath[] {
     return arrayInd.map(index => ({
@@ -161,12 +181,6 @@ export default function CircleButtonsGesture() {
         newWord.push(character);
       }
       setSelLetter(newWord);
-
-      // let newWord: string[] = selLetter!;
-      // if (newWord.lastIndexOf(letter) === newWord.length - 2) {
-      //   newWord.pop();
-      // setSelLetter(newWord);
-      // }
     }
   }
 
@@ -213,15 +227,24 @@ export default function CircleButtonsGesture() {
         },
         // Сбрасываем последовательность
         onPanResponderRelease: () => {
-          // отпустили кнопку - сохраняем, если отгадали
-          const result = LinewordTools.markSolvedWord(
-            grid!,
-            solvedGrid!,
-            selLetter!.join(''),
-          );
-          result.solved
-            ? storage.set('@solvedLineword', JSON.stringify(result.solvedGrid))
-            : null;
+          // отпустили кнопку - сохраняем, если отгадали  слово
+          if (selLetter!.length > 1) {
+            const result = LinewordTools.markSolvedWord(
+              grid!,
+              solvedGrid!,
+              selLetter!.join(''),
+            );
+
+            result.solved
+              ? (storage.set(
+                  '@solvedLineword',
+                  JSON.stringify(result.solvedGrid),
+                ),
+                storage.set('@lastWordPos', JSON.stringify(result.wordCoord)))
+              : null;
+          } else {
+            // проверим есть ли такое слово в словаре. Если есть - бонус+
+          }
           setSelLetter([]);
           setSelLetterOrder([]);
           polyLine = [];
@@ -239,7 +262,7 @@ export default function CircleButtonsGesture() {
   );
 
   return (
-    <Animated.View
+    <View
       onLayout={event => {
         event.target.measure((x, y, width, height, pageX, pageY) => {
           // размеры контейнера для холста. Рисовать круг и линии;
@@ -261,11 +284,13 @@ export default function CircleButtonsGesture() {
       </View>
 
       {/* // КРУГОВЫЕ КНОПКИ ================================================*/}
-      <CircleButton buttons={buttonsState!} />
+      <Animated.View style={{transform: [{scale: animation}]}}>
+        <CircleButton buttons={buttonsState!} />
+      </Animated.View>
 
       {/* кнопки справа */}
       <RightButton />
-    </Animated.View>
+    </View>
   );
 }
 
