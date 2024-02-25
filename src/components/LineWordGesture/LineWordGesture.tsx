@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import OpenTheWord from './OpenTheWord';
 import {LinewordGrid} from './LinewordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
 import {useMMKVBoolean, useMMKVObject, useMMKVString} from 'react-native-mmkv';
-import {Button} from 'react-native';
 import {MAX_LEVEL} from '../../types/constants';
+import CustomButton from '../../assets/load.button';
 
 export default function LineWordGesture({navigation}: any) {
   const [showGrid] = useMMKVBoolean('@showGrid');
@@ -31,7 +38,11 @@ export default function LineWordGesture({navigation}: any) {
       } else {
         setLevel((nLevel + 1).toString());
       }
-      showLabel(true);
+
+      setTimeout(() => {
+        showLabel(true);
+      }, 1500);
+
       setTimeout(() => {
         navigation.goBack();
       }, 3000);
@@ -52,19 +63,25 @@ export default function LineWordGesture({navigation}: any) {
           <LinewordGrid />
         )}
 
-        {/* <LinewordGrid /> */}
-
         <OpenTheWord />
 
         <CircleButtonsGesture />
-        <Button
-          onPress={() => {
-            setLevel('1');
-            setСhapter('0');
-            navigation.goBack();
-          }}
-          title="Clear"
-        />
+        <View style={styles.google}>
+          <Text>Здесь будет </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setLevel('1');
+              setСhapter('2');
+              navigation.goBack();
+            }}>
+            <Image
+              source={CustomButton.reset}
+              style={styles.sideButtons}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <Text> реклама от Google</Text>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -74,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   lentaContainer: {
@@ -87,7 +104,20 @@ const styles = StyleSheet.create({
   backImage: {
     width: '100%',
     height: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  google: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'yellow',
+    height: 80,
+    width: '100%',
+  },
+  sideButtons: {
+    width: 50,
+    height: 50,
   },
 });

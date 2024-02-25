@@ -1,3 +1,4 @@
+import {GRIDSIZE} from '../types/constants';
 import type {GridType, LetterPos} from '../types/data.type';
 import {storage} from './storage';
 
@@ -146,6 +147,43 @@ export namespace LinewordTools {
       }
     });
     return maxWord;
+  }
+
+  export function calculateDensity(grid: GridType): number {
+    let filled = 0;
+
+    // Проходимся по каждой ячейке в сетке
+    for (let i = 0; i < GRIDSIZE; i++) {
+      for (let j = 0; j < GRIDSIZE; j++) {
+        // Если ячейка не равна '#', считаем ее заполненной
+        if (grid[i][j] !== '#') {
+          filled++;
+        }
+      }
+    }
+
+    // Общее количество ячеек в сетке
+    const totalCells = GRIDSIZE * GRIDSIZE;
+
+    // Подсчет плотности
+    const filledRatio = filled / totalCells;
+    return filledRatio;
+  }
+
+  // Функция сравнения для перемешивания массива
+  export function shuffleArray(array: string[]): string[] {
+    // Копируем массив, чтобы не изменять исходный
+    let shuffledArray = array.slice();
+
+    // Функция для генерации случайного числа от 0 до 1
+    function getRandomNumber() {
+      return Math.random() - 0.5;
+    }
+
+    // Перемешиваем массив
+    shuffledArray.sort(getRandomNumber);
+
+    return shuffledArray;
   }
 
   // export function findWordCoordinates(

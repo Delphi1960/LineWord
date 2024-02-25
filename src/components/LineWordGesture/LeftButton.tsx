@@ -3,12 +3,14 @@ import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {storage} from '../../utils/storage';
 import InfoModal from '../supporting/InfoModal';
-import {useMMKVBoolean} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import {generateGrid} from '../../utils/generateGrid';
+import {Badge} from '@rneui/themed';
 
 export default function LeftButton() {
   const [, setWord] = useState<string>('');
   const [showGrid, setShowGrid] = useMMKVBoolean('@showGrid');
+  const [wordBonus] = useMMKVObject<string[]>('@wordBonus');
 
   // Show Modal dialog
   const [show, setShow] = useState(false);
@@ -29,27 +31,24 @@ export default function LeftButton() {
 
   return (
     <View style={styles.sideButtonsContainer}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           generateGrid();
-          // generateLineWord();
-
           setWord('');
           storage.set('@lineButtonText', '');
-          // setPressedColor(PRESSEDCOLOR_OFF);
         }}>
         <Image
           source={CustomButton.reset}
           style={styles.sideButtons}
           resizeMode="contain"
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         onPress={() => {
           setModalProps({
             title: 'Ваши бонусы',
-            text: 'Бонусами являются слова, которые можно составить из букв кнопок, но не предусмотренны в кроссворде',
+            text: wordBonus!.join(', '),
             pressOk: showBonus, // Передаем функцию showLetter для кнопки "ОК"
             pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
           });
@@ -59,6 +58,11 @@ export default function LeftButton() {
           source={CustomButton.bonus}
           style={styles.sideButtons}
           resizeMode="contain"
+        />
+        <Badge
+          status="error"
+          value={wordBonus?.length}
+          containerStyle={{position: 'absolute', top: 5, left: 50}}
         />
       </TouchableOpacity>
 
@@ -84,15 +88,16 @@ export default function LeftButton() {
 
 const styles = StyleSheet.create({
   sideButtonsContainer: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     // backgroundColor: 'lightblue',
+    height: '100%',
     zIndex: 2,
   },
 
   sideButtons: {
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
-    margin: 10,
+    margin: 5,
     width: 50,
     height: 50,
   },

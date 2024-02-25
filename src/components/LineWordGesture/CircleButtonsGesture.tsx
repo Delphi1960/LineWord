@@ -100,6 +100,10 @@ export default function CircleButtonsGesture() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
 
+  const [unusedWords] = useMMKVObject<string[]>('@wordUnused');
+
+  const [wordBonus, setWordBonus] = useMMKVObject<string[]>('@wordBonus');
+
   const [buttonsState] = useMMKVObject<CircleButtonType[]>('@buttonsState');
 
   const [buttonRegion, setButtonRegion] = useState<CircleButtonRegion>({
@@ -147,10 +151,10 @@ export default function CircleButtonsGesture() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const addToSequence = (but: CircleButtonType) => {
+  function addToSequence(but: CircleButtonType) {
     addIndexAndLetter(but.index, but.button);
     delIndexAndLetter(but.index /*, but.button*/);
-  };
+  }
 
   function addIndexAndLetter(index: number, letter: string) {
     let newIndex: number[] = selLetterOrder!;
@@ -184,11 +188,11 @@ export default function CircleButtonsGesture() {
     }
   }
 
-  const searchButton = (
+  function searchButton(
     touchX: number,
     touchY: number,
     butState: CircleButtonType[],
-  ) => {
+  ) {
     for (const button of butState) {
       const {x, y} = button.position;
 
@@ -202,7 +206,7 @@ export default function CircleButtonsGesture() {
       }
     }
     return null;
-  };
+  }
 
   const panResponder = React.useMemo(
     () =>
@@ -234,16 +238,31 @@ export default function CircleButtonsGesture() {
               solvedGrid!,
               selLetter!.join(''),
             );
+            // setShowHint(true);
+            // fadeIn();
 
-            result.solved
-              ? (storage.set(
-                  '@solvedLineword',
-                  JSON.stringify(result.solvedGrid),
-                ),
-                storage.set('@lastWordPos', JSON.stringify(result.wordCoord)))
-              : null;
-          } else {
-            // проверим есть ли такое слово в словаре. Если есть - бонус+
+            if (result.solved) {
+              storage.set('@solvedLineword', JSON.stringify(result.solvedGrid));
+              storage.set('@lastWordPos', JSON.stringify(result.wordCoord));
+            } else {
+              // проверим есть ли такое слово в словаре. Если есть - бонус+
+              // Проходим по каждому слову в workWords
+              let bonus: string[] = wordBonus!;
+              let currentWord: string = selLetter!.join('');
+
+              // setShowHint(bonus.includes(currentWord));
+              // fadeIn();
+
+              // Проверяем, входит ли текущее слово в unusedWords
+              if (
+                unusedWords!.includes(currentWord) &&
+                !bonus.includes(currentWord)
+              ) {
+                bonus.push(currentWord);
+              }
+              setWordBonus(bonus);
+            }
+            storage.set('@currentWord', selLetter!.join(''));
           }
           setSelLetter([]);
           setSelLetterOrder([]);
@@ -257,7 +276,10 @@ export default function CircleButtonsGesture() {
       selLetter,
       setSelLetter,
       setSelLetterOrder,
+      setWordBonus,
       solvedGrid,
+      unusedWords,
+      wordBonus,
     ],
   );
 
@@ -297,11 +319,12 @@ export default function CircleButtonsGesture() {
 const styles = StyleSheet.create({
   circleContainer: {
     // flex: 1,
+    marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: RADIUS * 2 + LINEWORD_CIRCLE_BUTTON_SIZE + 20,
-    // backgroundColor: 'yellow',
+    height: RADIUS * 2 + LINEWORD_CIRCLE_BUTTON_SIZE / 2,
+    // backgroundColor: 'lightblue',
     alignItems: 'center',
   },
   image: {

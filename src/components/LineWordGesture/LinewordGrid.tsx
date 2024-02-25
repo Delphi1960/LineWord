@@ -22,7 +22,7 @@ export function LinewordGrid() {
   const [showGrid] = useMMKVBoolean('@showGrid');
 
   const [buttonAnimation] = useState(
-    grid!.map(row => row.map(item => new Animated.Value(1))),
+    grid!.map(row => row.map(() => new Animated.Value(1))),
   );
   const [lastWord] = useMMKVString('@lastWord');
   const [coordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
@@ -62,14 +62,15 @@ export function LinewordGrid() {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordWord, lastWord, solvedGrid]);
 
   const styles = StyleSheet.create({
     gridContainer: {
-      flex: 1,
-      flexDirection: 'column',
+      // flex: 1,
+      // flexDirection: 'column',
       alignItems: 'center',
-      marginTop: 20,
+      marginTop: 10,
     },
     row: {
       flexDirection: 'row',

@@ -4,8 +4,16 @@ import {WordsList} from '../assets/data/cleaned_nouns_ru';
 
 import {EMPTYCELL, GRIDSIZE} from '../types/constants';
 import {GridType} from '../types/data.type';
+import {LinewordTools} from './LinewordTools';
 import {attemptToPlaceWordOnGrid} from './generateGridTools';
 import {storage} from './storage';
+
+interface CrosswordDensity {
+  maxWords: number;
+  words: string[];
+  density: number;
+  gridVariant: GridType;
+}
 
 export function generateGrid() {
   const chapter = storage.getString('@chapter');
@@ -63,22 +71,6 @@ export function generateGrid() {
     return validFilteredWords;
   }
 
-  // Функция сравнения для перемешивания массива
-  function shuffleArray(array: string[]): string[] {
-    // Копируем массив, чтобы не изменять исходный
-    let shuffledArray = array.slice();
-
-    // Функция для генерации случайного числа от 0 до 1
-    function getRandomNumber() {
-      return Math.random() - 0.5;
-    }
-
-    // Перемешиваем массив
-    shuffledArray.sort(getRandomNumber);
-
-    return shuffledArray;
-  }
-
   // Выбор случайного слова с указанным количеством букв
   function getRandomWordWithUniqueLetters(arrayWords: string[]): string {
     const filteredWords = arrayWords.filter(
@@ -113,8 +105,6 @@ export function generateGrid() {
   let workWords: string[] = [];
   let letterButtons: string[] = [];
 
-  // randomWord = 'ГРОЗА';
-  // randomWord = 'ЗВЕЗДА';
   while (workWords.length === 0) {
     randomWord = getRandomWordWithUniqueLetters(words);
     letterButtons = randomWord.split('');
@@ -133,75 +123,90 @@ export function generateGrid() {
     grid[GRIDSIZE / 2 - 1][startIndex + i] = randomWord[i];
   }
 
-  let bestGrid: GridType = [];
-  let maxCount = 0;
-  let wordUsed: string[] = [];
-  let maxWordUsed: string[] = []; //слова использованные в кроссворде
   let placedWords: string[] = [];
+  const grids: CrosswordDensity[] = [];
 
   for (let i = 0; i < 10; i++) {
     const newGrid = grid.map(innerArray => innerArray.slice());
-    placedWords = workWords.slice(); // Копируем массив workWords
-    // placedWords = shuffleArray(workWords);
+    // Копируем и перемешиваем массив workWords
+    placedWords = LinewordTools.shuffleArray(workWords.slice());
+    // console.log(placedWords);
 
-    wordUsed = [];
-    let count: number = 0;
+    let wordCount: number = 0; //число слов вошедших в сетку
+    let wordUsed: string[] = []; //слова использованные в кроссворде
     while (placedWords.length > 0) {
       let word: string | undefined = placedWords.pop(); // извлекаем и удаляем последнее слово из списка
       if (word) {
         if (attemptToPlaceWordOnGrid(newGrid, word)) {
-          count++;
+          wordCount++;
           wordUsed.push(word);
-          continue;
         }
       }
     }
-    // console.log(`${wordUsed.length}слов из ${workWords.length}`);
-    if (count > maxCount) {
-      maxCount = count;
-      bestGrid = newGrid.map(innerArray => innerArray.slice());
-      maxWordUsed = wordUsed.map(innerArray => innerArray.slice());
-      maxWordUsed.push(randomWord); //первое слово кроссворда
-    }
-    // console.log({count, maxCount});
+    // Формируем массив сеток
+    grids.push({
+      maxWords: wordCount, //число слов в сетке
+      words: wordUsed,
+      density: LinewordTools.calculateDensity(newGrid), // плотность сетки
+      gridVariant: newGrid.map(innerArray => innerArray.slice()), // сама сетка
+    });
   }
-  // console.log(workWords);
+  // -----------------------------------------------------------------------------
+  // Находим элемент массива с максимальными значениями maxWords и density
+  const maxDensityElement: CrosswordDensity = grids.reduce((max, current) => {
+    // Сравниваем текущий элемент с максимальным
+    if (
+      current.maxWords > max.maxWords ||
+      (current.maxWords === max.maxWords && current.density > max.density)
+    ) {
+      return current; // Обновляем максимальное значение
+    } else {
+      return max; // Оставляем текущее максимальное значение
+    }
+  }, grids[0]); // Начинаем с первого элемента мас
+  console.log(maxDensityElement.maxWords, maxDensityElement.density);
+  console.log(maxDensityElement.words);
+  console.log('====================');
 
   const unusedWords = [];
 
   // Проходим по каждому слову в workWords
   for (let i = 0; i < workWords.length; i++) {
-    // Проверяем, входит ли текущее слово в maxWordUsed
-    if (!maxWordUsed.includes(workWords[i])) {
+    // Проверяем, входит ли текущее слово в maxDensityElement.words
+    if (!maxDensityElement.words.includes(workWords[i])) {
       // Если текущее слово не входит в maxWordUsed, добавляем его в unusedWords
       unusedWords.push(workWords[i]);
     }
   }
-  // console.log(randomWord, workWords);
-  // console.log(
-  //   `${maxWordUsed.length - 1} из ${
-  //     workWords.length
-  //   } Не вошли ${unusedWords} из ${workWords}`,
-  // );
-  // console.log(maxWordUsed);
+  console.log(unusedWords);
+
   // SAVE ============================================================================
 
-  storage.set('@wordUsed', JSON.stringify(maxWordUsed));
+  storage.set('@wordUsed', JSON.stringify(maxDensityElement.words));
+  storage.set('@wordUnused', JSON.stringify(unusedWords));
+  storage.set('@wordBonus', JSON.stringify([]));
+  storage.set('@currentWord', '');
 
-  storage.set('@lineword', JSON.stringify(bestGrid));
+  storage.set('@lineword', JSON.stringify(maxDensityElement.gridVariant));
+  // storage.set('@lineword', JSON.stringify(bestGrid));
 
   // заменим буквы нулями, чтобы потом понимать, что разгадано. "1"-разгадано
-  const solvedGrid: string[][] = bestGrid.map(row =>
+  const solvedGrid: string[][] = maxDensityElement.gridVariant.map(row =>
     row.map(cell => (cell === EMPTYCELL ? EMPTYCELL : '0')),
   );
 
   storage.set('@solvedLineword', JSON.stringify(solvedGrid));
 
   storage.set('@lineButtonText', '');
-  storage.set('@circleButton', JSON.stringify(letterButtons));
+
+  storage.set(
+    '@circleButton',
+    JSON.stringify(LinewordTools.shuffleArray(letterButtons)),
+  );
 
   storage.set('@buttonsState', JSON.stringify([]));
 
   storage.set('@arrayLetter', JSON.stringify([]));
   storage.set('@arrayOrder', JSON.stringify([]));
+  storage.set('@lastWordPos', JSON.stringify([]));
 }

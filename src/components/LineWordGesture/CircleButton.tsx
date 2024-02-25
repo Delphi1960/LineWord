@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {LINEWORD_CIRCLE_BUTTON_SIZE, RADIUS} from '../../types/constants';
@@ -12,21 +12,19 @@ type Props = {buttons: CircleButtonType[]};
 
 const getButtonPosition = (
   index: number,
-  radius: number,
+
   numberOfButtons: number,
 ) => {
   const angle = (index * 360) / numberOfButtons + 180; // Добавляем смещение на 180 градусов
   const radians = (angle * Math.PI) / 180;
 
-  const x = Math.sin(radians) * radius; // радиус окружности - в данном случае, radius
-  const y = Math.cos(radians) * radius;
+  const x = Math.sin(radians) * RADIUS; // радиус окружности - в данном случае, RADIUS
+  const y = Math.cos(radians) * RADIUS;
 
   return {transform: [{translateX: x}, {translateY: y}]};
 };
 
 export default function CircleButton({buttons}: Props) {
-  const [circleRadius] = useState<number>(RADIUS);
-
   const [selLetterOrder] = useMMKVObject<number[]>('@arrayOrder');
 
   // ОБНОВИТЬ КООРДИНАТЫ КНОПОК
@@ -57,10 +55,7 @@ export default function CircleButton({buttons}: Props) {
             });
           }}
           //
-          style={[
-            styles.button,
-            getButtonPosition(index, circleRadius, buttons.length),
-          ]}>
+          style={[styles.button, getButtonPosition(index, buttons.length)]}>
           <Image
             source={
               selLetterOrder?.includes(index)
@@ -81,13 +76,14 @@ export default function CircleButton({buttons}: Props) {
 }
 const styles = StyleSheet.create({
   circle: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    width: RADIUS * 2,
+    height: RADIUS * 2,
+    borderRadius: RADIUS,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 20,
     zIndex: 0,
+    // backgroundColor: 'blue',
   },
 
   button: {

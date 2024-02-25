@@ -47,7 +47,7 @@ export default function RightButton() {
           resizeMode="contain"
         />
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           setModalProps({
             title: 'Открыть слово?',
@@ -62,14 +62,14 @@ export default function RightButton() {
           style={styles.sideButtons}
           resizeMode="contain"
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         onPress={() => {
           setModalProps({
             title: 'HELP!',
             text: 'Не знаю пока, нужно или нет!',
-            pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
+            pressOk: () => setShow(false), // Передаем функцию showLetter для кнопки "ОК"
             pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
           });
           setShow(true);
@@ -94,15 +94,16 @@ export default function RightButton() {
 
 const styles = StyleSheet.create({
   sideButtonsContainer: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     // backgroundColor: 'lightblue',
+    height: '100%',
     zIndex: 2,
   },
 
   sideButtons: {
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
-    margin: 10,
+    margin: 5,
     width: 50,
     height: 50,
   },

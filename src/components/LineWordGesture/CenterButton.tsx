@@ -5,6 +5,7 @@ import {LINEWORD_CIRCLE_BUTTON_SIZE} from '../../types/constants';
 import {useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 import {CircleButtonType} from '../../types/data.type';
+import {shuffleLetters} from '../../utils/shuffleLetters';
 
 type Props = {
   buttons: CircleButtonType[];
@@ -33,20 +34,6 @@ export default function CenterButton({buttons}: Props) {
       }),
     ]).start();
   };
-
-  // Перемешать буквы на кнопках
-  function shuffleLetters(arr: CircleButtonType[]): CircleButtonType[] {
-    // Извлекаем буквы из объектов в массив
-    const letters = arr.map(obj => obj.button);
-    // Перемешиваем буквы
-    for (let i = letters.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [letters[i], letters[j]] = [letters[j], letters[i]];
-    }
-
-    // Заменяем буквы в исходном массиве на перетасованные
-    return arr.map((obj, index) => ({...obj, button: letters[index]}));
-  }
 
   //onPress на центральную кнопку для перемешивания букв
   const handleCenterButton = () => {
