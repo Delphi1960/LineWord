@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
-import InfoModal from '../supporting/InfoModal';
 import {LinewordTools} from '../../utils/LinewordTools';
 import {useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 import {LetterPos} from '../../types/data.type';
+import Options from '../supporting/Options';
 
 export default function RightButton() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
@@ -47,41 +47,24 @@ export default function RightButton() {
           resizeMode="contain"
         />
       </TouchableOpacity>
-      {/* <TouchableOpacity
-        onPress={() => {
-          setModalProps({
-            title: 'Открыть слово?',
-            text: 'Тут одним баллом не обойдешься!',
-            pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
-            pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
-          });
-          setShow(true);
-        }}>
-        <Image
-          source={CustomButton.openWord}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-      </TouchableOpacity> */}
-
       <TouchableOpacity
         onPress={() => {
           setModalProps({
-            title: 'HELP!',
-            text: 'Не знаю пока, нужно или нет!',
+            title: 'Настройки',
+            text: 'Комфорт без насилия!',
             pressOk: () => setShow(false), // Передаем функцию showLetter для кнопки "ОК"
             pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
           });
           setShow(true);
         }}>
         <Image
-          source={CustomButton.help}
+          source={CustomButton.reset}
           style={styles.sideButtons}
           resizeMode="contain"
         />
       </TouchableOpacity>
 
-      <InfoModal
+      <Options
         visible={show}
         title={modalProps.title}
         text={modalProps.text}

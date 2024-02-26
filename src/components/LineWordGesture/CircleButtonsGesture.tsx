@@ -14,6 +14,7 @@ import RightButton from './RightButton';
 import type {CircleButtonType} from '../../types/data.type';
 import CircleButton from './CircleButton';
 import {storage} from '../../utils/storage';
+import Sound from 'react-native-sound';
 
 interface LinePath {
   x: number;
@@ -86,8 +87,34 @@ const GesturePath = ({region, path}: LineProps) => {
   );
 };
 
+// sound------------------------------------
+let sound = new Sound(require('../../assets/sound/re.mp3'));
+sound.setVolume(1);
+Sound.setCategory('Playback', true); //если false - остановит воспроизведение
+// sound------------------------------------
+
 let polyLine: LinePath[] = [];
 //
+
+const soundList = [
+  new Sound(require('../../assets/sound/do.mp3')),
+  new Sound(require('../../assets/sound/re.mp3')),
+  new Sound(require('../../assets/sound/mi.mp3')),
+  new Sound(require('../../assets/sound/fa.mp3')),
+  new Sound(require('../../assets/sound/sol.mp3')),
+  new Sound(require('../../assets/sound/lya.mp3')),
+  new Sound(require('../../assets/sound/si.mp3')),
+];
+// const soundList = [
+//   {key: 'sound1', file: require('../../assets/sound/do.mp3')},
+//   {key: 'sound2', file: require('../../assets/sound/re.mp3')},
+//   {key: 'sound3', file: require('../../assets/sound/mi.mp3')},
+//   {key: 'sound4', file: require('../../assets/sound/fa.mp3')},
+//   {key: 'sound5', file: require('../../assets/sound/sol.mp3')},
+//   {key: 'sound6', file: require('../../assets/sound/lya.mp3')},
+//   {key: 'sound7', file: require('../../assets/sound/si.mp3')},
+//   // добавьте здесь другие звуки, если нужно
+// ];
 
 // ===================================================================================
 // type Props = {
@@ -118,6 +145,8 @@ export default function CircleButtonsGesture() {
     useMMKVObject<number[]>('@arrayOrder');
 
   const [animation] = useState(new Animated.Value(1));
+
+  const [sounds, setSounds] = useState(soundList);
 
   useEffect(() => {
     const pulseButton = () => {
@@ -166,6 +195,7 @@ export default function CircleButtonsGesture() {
       let newWord: string[] = selLetter!;
       newWord.push(letter);
       setSelLetter(newWord);
+      sounds[index].play();
     }
   }
 
@@ -177,6 +207,7 @@ export default function CircleButtonsGesture() {
         newIndex.pop();
         setSelLetterOrder(newIndex);
         polyLine = setPolyLine(newIndex);
+        sounds[index].play();
       }
 
       let newWord: string[] = [];
@@ -269,6 +300,7 @@ export default function CircleButtonsGesture() {
           polyLine = [];
         },
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       addToSequence,
       buttonsState,

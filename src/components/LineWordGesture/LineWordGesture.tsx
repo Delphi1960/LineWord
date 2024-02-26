@@ -14,6 +14,12 @@ import CustomImage from '../../assets/image';
 import {useMMKVBoolean, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 import {MAX_LEVEL} from '../../types/constants';
 import CustomButton from '../../assets/load.button';
+import Sound from 'react-native-sound';
+
+// sound------------------------------------
+let sound = new Sound(require('../../assets/sound/melody.wav'));
+sound.setVolume(1);
+Sound.setCategory('Playback', true); //если false - остановит воспроизведение
 
 export default function LineWordGesture({navigation}: any) {
   const [showGrid] = useMMKVBoolean('@showGrid');
@@ -40,6 +46,7 @@ export default function LineWordGesture({navigation}: any) {
       }
 
       setTimeout(() => {
+        sound.play();
         showLabel(true);
       }, 1500);
 

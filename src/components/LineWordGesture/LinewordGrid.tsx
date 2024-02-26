@@ -25,7 +25,7 @@ export function LinewordGrid() {
     grid!.map(row => row.map(() => new Animated.Value(1))),
   );
   const [lastWord] = useMMKVString('@lastWord');
-  const [coordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
+  const [coordWord, setCoordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
 
   function openLetter(rowIndex: number, colIndex: number) {
     LinewordTools.openLetter(rowIndex, colIndex, solvedGrid!);
@@ -60,6 +60,7 @@ export function LinewordGrid() {
             pulseButton(coord.y, coord.x);
           }, 200 * index);
         });
+        setCoordWord([]);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

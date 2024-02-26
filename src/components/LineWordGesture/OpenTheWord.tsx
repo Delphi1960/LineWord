@@ -46,8 +46,8 @@ export default function OpenTheWord() {
     };
     if (selLetter?.length === 0) {
       if (
-        wordBonus?.includes(currentWord!) ||
-        wordUsed?.includes(currentWord!)
+        wordBonus?.includes(currentWord!)
+        // ||  wordUsed?.includes(currentWord!)
       ) {
         setShowHint(true);
         fadeIn();
