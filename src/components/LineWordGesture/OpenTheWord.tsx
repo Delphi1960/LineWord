@@ -8,15 +8,22 @@ import {
   Dimensions,
   Animated,
 } from 'react-native';
-import {useMMKVObject, useMMKVString} from 'react-native-mmkv';
+import {useMMKVNumber, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 import CustomButton from '../../assets/load.button';
 import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import {TextStroke} from '../../utils/TextStroke';
+import InfoModal from '../supporting/InfoModal';
 
 export default function OpenTheWord() {
   const [selLetter] = useMMKVObject<string[]>('@arrayLetter');
-  const [wordBonus] = useMMKVObject<string[]>('@wordBonus');
-  const [wordUsed] = useMMKVObject<string[]>('@wordUsed');
+
+  const [unusedWords] = useMMKVObject<string[]>('@wordUnused');
+
+  const [wordBonus, setWordBonus] = useMMKVObject<string[]>('@wordBonus');
+
+  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
+  const [freeHintCount, setFreeHintCount] = useMMKVNumber('@freeHintCount');
+
   const [currentWord] = useMMKVString('@currentWord');
 
   const [showHint, setShowHint] = useState(false);
@@ -44,25 +51,66 @@ export default function OpenTheWord() {
         }),
       ]).start();
     };
+
     if (selLetter?.length === 0) {
       if (
-        wordBonus?.includes(currentWord!)
-        // ||  wordUsed?.includes(currentWord!)
+        unusedWords!.includes(currentWord!) &&
+        !wordBonus!.includes(currentWord!)
       ) {
+        setShowHint(false);
+        let bonus: string[] = wordBonus!;
+        bonus.push(currentWord!);
+        setWordBonus(bonus);
+        let numberBonusCount = bonusCount! + 1;
+        setBonusCount(numberBonusCount);
+      } else if (wordBonus!.includes(currentWord!)) {
         setShowHint(true);
         fadeIn();
       }
     }
-  }, [currentWord, fadeAnim, selLetter?.length, wordBonus, wordUsed]);
+  }, [currentWord, selLetter?.length]);
+
+  // Show Modal dialog
+  const [show, setShow] = useState(false);
+  const [modalProps, setModalProps] = useState({
+    title: '',
+    text: '',
+    pressOk: () => {},
+    pressCancel: () => {},
+  });
+  // Modal show bonus
+  const showBonus = () => {
+    setShow(false);
+  };
+
+  useEffect(() => {
+    if (Number(bonusCount) === 10) {
+      setModalProps({
+        title: 'Поздравляем!',
+        text: 'Вы получили бесплатную подсказку.',
+        pressOk: showBonus, // Передаем функцию showLetter для кнопки "ОК"
+        pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
+      });
+      setShow(true);
+      setFreeHintCount(freeHintCount! + 1);
+      setBonusCount(0);
+      setWordBonus([]);
+    }
+  }, [
+    bonusCount,
+    freeHintCount,
+    setBonusCount,
+    setFreeHintCount,
+    setWordBonus,
+    wordBonus,
+  ]);
 
   return (
     <View style={styles.textContainer}>
       {showHint ? (
-        <Animated.View style={[{alignItems: 'center'}, {opacity: fadeAnim}]}>
+        <Animated.View style={[styles.hintView, {opacity: fadeAnim}]}>
           <TextStroke stroke={0.7} color={'black'}>
-            <Text style={{fontSize: 16, fontWeight: '700', color: 'yellow'}}>
-              Это слово уже есть!
-            </Text>
+            <Text style={styles.hintText}>Это слово уже есть!</Text>
           </TextStroke>
         </Animated.View>
       ) : (
@@ -77,6 +125,14 @@ export default function OpenTheWord() {
           </TouchableOpacity>
         ))
       )}
+
+      <InfoModal
+        visible={show}
+        title={modalProps.title}
+        text={modalProps.text}
+        pressOk={modalProps.pressOk}
+        // pressCancel={modalProps.pressCancel}
+      />
     </View>
   );
 }
@@ -89,6 +145,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width,
     // borderWidth: 1,
   },
+  hintView: {alignItems: 'center'},
+  hintText: {fontSize: 16, fontWeight: '700', color: 'yellow'},
   image: {
     width: LINEWORD_BUTTON_SIZE, // Set the width of your image
     height: LINEWORD_BUTTON_SIZE, // Set the height of your image

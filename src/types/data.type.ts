@@ -54,3 +54,10 @@ export interface LetterPos {
   y: number;
   x: number;
 }
+
+export interface CrosswordDensity {
+  maxWords: number;
+  words: string[];
+  density: number;
+  gridVariant: GridType;
+}

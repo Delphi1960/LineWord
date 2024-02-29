@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import CustomButton from '../../assets/load.button';
-import {storage} from '../../utils/storage';
 import InfoModal from '../supporting/InfoModal';
-import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
-import {generateGrid} from '../../utils/generateGrid';
+import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import {Badge} from '@rneui/themed';
 
 export default function LeftButton() {
-  const [, setWord] = useState<string>('');
+  const [] = useState<string>('');
   const [showGrid, setShowGrid] = useMMKVBoolean('@showGrid');
   const [wordBonus] = useMMKVObject<string[]>('@wordBonus');
+  const [bonusCount] = useMMKVNumber('@bonusCount');
 
   // Show Modal dialog
   const [show, setShow] = useState(false);
@@ -61,14 +60,14 @@ export default function LeftButton() {
         />
         <Badge
           status="error"
-          value={wordBonus?.length}
-          containerStyle={{position: 'absolute', top: 5, left: 50}}
+          value={bonusCount}
+          containerStyle={styles.badge}
         />
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleShowGrid}>
         <Image
-          source={showGrid ? CustomButton.blueOn : CustomButton.blueOff}
+          source={CustomButton.grid}
           style={styles.sideButtons}
           resizeMode="contain"
         />
@@ -80,7 +79,7 @@ export default function LeftButton() {
         title={modalProps.title}
         text={modalProps.text}
         pressOk={modalProps.pressOk}
-        pressCancel={modalProps.pressCancel}
+        // pressCancel={modalProps.pressCancel}
       />
     </View>
   );
@@ -93,11 +92,11 @@ const styles = StyleSheet.create({
     height: '100%',
     zIndex: 2,
   },
-
+  badge: {position: 'absolute', top: 5, left: 50},
   sideButtons: {
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
-    margin: 5,
+    margin: 10,
     width: 50,
     height: 50,
   },

@@ -1,22 +1,21 @@
 import React from 'react';
 import {
-  BackHandler,
   Image,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import CustomImage from '../assets/image';
-import CustomButton from '../assets/load.button';
+import CustomImage from '../../assets/image';
+import CustomButton from '../../assets/load.button';
 import {useMMKVBoolean, useMMKVString} from 'react-native-mmkv';
-import {generateGrid} from '../utils/generateGrid';
-import {storage} from '../utils/storage';
-import {MAX_CHAPTER, MAX_LEVEL} from '../types/constants';
+import {generateGrid} from '../../utils/generateGrid';
+import {storage} from '../../utils/storage';
+import {MAX_CHAPTER, MAX_LEVEL} from '../../types/constants';
 import FastImage from 'react-native-fast-image';
-import GifImage from '../assets/gif.image';
+import GifImage from '../../assets/gif.image';
 
-import ProgressBar from '../components/supporting/ProgressBar';
+import ProgressBar from '../supporting/ProgressBar';
 import {Button} from 'react-native-paper';
 
 type Props = {
@@ -34,6 +33,12 @@ export default function StartGame({navigation}: Props) {
 
   storage.contains('@chapter') ? null : storage.set('@chapter', '0');
   storage.contains('@level') ? null : storage.set('@level', '1');
+  storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
+  storage.contains('@freeHintCount') ? null : storage.set('@freeHintCount', 0);
+
+  storage.contains('@mainWords')
+    ? null
+    : storage.set('@mainWords', JSON.stringify([]));
 
   const [chapter, setСhapter] = useMMKVString('@chapter');
   const [level, setLevel] = useMMKVString('@level');
@@ -49,7 +54,7 @@ export default function StartGame({navigation}: Props) {
   return (
     <View style={styles.mainContainer}>
       <ImageBackground
-        source={showGrid ? CustomImage.milkPath : CustomImage.sky}
+        source={showGrid ? CustomImage.milkyway : CustomImage.sky}
         style={styles.backImage}>
         {Number(chapter) > MAX_CHAPTER ? (
           <View>
@@ -58,18 +63,22 @@ export default function StartGame({navigation}: Props) {
               source={GifImage.salut}
               resizeMode={FastImage.resizeMode.contain}
             />
-            <View style={styles.finalGame}>
+
+            <View style={styles.exitButton}>
               <Button
-                icon="refresh-circle"
-                mode="contained"
+                icon="exit-run"
+                mode="outlined"
+                // uppercase={true}
+                labelStyle={styles.butText}
+                style={styles.butStyle}
+                // buttonColor="blue"
+                textColor="darkblue"
                 onPress={() => {
                   setLevel('1');
                   setСhapter('0');
+                  navigation.goBack();
                 }}>
-                Переиграть
-              </Button>
-              <Button icon="exit-run" mode="contained" onPress={() => {}}>
-                Выход
+                Назад
               </Button>
             </View>
           </View>
@@ -110,9 +119,14 @@ export default function StartGame({navigation}: Props) {
             <View style={styles.exitButton}>
               <Button
                 icon="exit-run"
-                mode="contained"
+                mode="outlined"
+                // uppercase={true}
+                labelStyle={styles.butText}
+                style={styles.butStyle}
+                // buttonColor="blue"
+                textColor="darkblue"
                 onPress={() => {
-                  BackHandler.exitApp();
+                  navigation.goBack();
                 }}>
                 Выход
               </Button>
@@ -165,7 +179,10 @@ const styles = StyleSheet.create({
   exitButton: {
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     marginTop: 50,
   },
   finalGame: {flexDirection: 'row', justifyContent: 'center'},
+  butText: {fontSize: 18},
+  butStyle: {width: 250},
 });

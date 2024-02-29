@@ -2,18 +2,21 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {LinewordTools} from '../../utils/LinewordTools';
-import {useMMKVObject} from 'react-native-mmkv';
+import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 import {LetterPos} from '../../types/data.type';
 import Options from '../supporting/Options';
+import {Badge} from '@rneui/themed';
+import InfoModal from '../supporting/InfoModal';
 
 export default function RightButton() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
+  const [freeHintCount, setFreeHintCount] = useMMKVNumber('@freeHintCount');
 
   // Show Modal dialog
-  const [show, setShow] = useState(false);
-  const [modalProps, setModalProps] = useState({
+  const [showInfo, setShowInfo] = useState(false);
+  const [infoProps, setInfoProps] = useState({
     title: '',
     text: '',
     pressOk: () => {},
@@ -21,55 +24,82 @@ export default function RightButton() {
   });
   // Modal Open letter
   const showLetter = () => {
-    setShow(false);
+    setShowInfo(false);
     let letterPos: LetterPos[] = LinewordTools.markSolvedLetter(
       grid!,
       solvedGrid!,
     )!;
     storage.set('@lastWordPos', JSON.stringify(letterPos));
+    freeHintCount! > 0
+      ? setFreeHintCount(freeHintCount! - 1)
+      : setFreeHintCount(0);
   };
+
+  const [showOptions, setShowOptions] = useState(false);
+  const [optionsProps, setOptionsProps] = useState({
+    title: '',
+    // text: '',
+    pressOk: () => {},
+    // pressCancel: () => {},
+  });
 
   return (
     <View style={styles.sideButtonsContainer}>
       <TouchableOpacity
         onPress={() => {
-          setModalProps({
+          setInfoProps({
             title: 'Открыть одну букву?',
-            text: 'С Вас снимут 1 бал или покажут рекламу!',
+            text:
+              freeHintCount! > 0
+                ? `У вас есть ${freeHintCount} бесплатных подсказок`
+                : 'У вас нет бесплатных подсказок.\nПридется посмотреть рекламу.',
             pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
-            pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
+            pressCancel: () => setShowInfo(false), // Передаем функцию для кнопки "Отмена"
           });
-          setShow(true);
+          setShowInfo(true);
         }}>
         <Image
-          source={CustomButton.openLetter}
+          source={CustomButton.openWord}
           style={styles.sideButtons}
           resizeMode="contain"
+        />
+        <Badge
+          status="error"
+          value={freeHintCount}
+          containerStyle={styles.badge}
         />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          setModalProps({
+          setOptionsProps({
             title: 'Настройки',
-            text: 'Комфорт без насилия!',
-            pressOk: () => setShow(false), // Передаем функцию showLetter для кнопки "ОК"
-            pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
+            // text: '',
+            pressOk: () => setShowOptions(false), // Передаем функцию showLetter для кнопки "ОК"
+            // pressCancel: () => setShowOptions(false), // Передаем функцию для кнопки "Отмена"
           });
-          setShow(true);
+          setShowOptions(true);
         }}>
         <Image
-          source={CustomButton.reset}
+          source={CustomButton.setBlue}
           style={styles.sideButtons}
           resizeMode="contain"
         />
       </TouchableOpacity>
 
       <Options
-        visible={show}
-        title={modalProps.title}
-        text={modalProps.text}
-        pressOk={modalProps.pressOk}
-        pressCancel={modalProps.pressCancel}
+        visible={showOptions}
+        title={optionsProps.title}
+        // text={optionsProps.text}
+        pressOk={optionsProps.pressOk}
+        // pressCancel={optionsProps.pressCancel}
+      />
+
+      <InfoModal
+        visible={showInfo}
+        title={infoProps.title}
+        text={infoProps.text}
+        pressOk={infoProps.pressOk}
+        pressCancel={infoProps.pressCancel}
       />
     </View>
   );
@@ -86,8 +116,9 @@ const styles = StyleSheet.create({
   sideButtons: {
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
-    margin: 5,
+    margin: 10,
     width: 50,
     height: 50,
   },
+  badge: {position: 'absolute', top: 5, left: -10},
 });

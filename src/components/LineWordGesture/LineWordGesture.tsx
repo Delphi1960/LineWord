@@ -11,10 +11,16 @@ import OpenTheWord from './OpenTheWord';
 import {LinewordGrid} from './LinewordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
-import {useMMKVBoolean, useMMKVObject, useMMKVString} from 'react-native-mmkv';
+import {
+  useMMKVBoolean,
+  useMMKVNumber,
+  useMMKVObject,
+  useMMKVString,
+} from 'react-native-mmkv';
 import {MAX_LEVEL} from '../../types/constants';
 import CustomButton from '../../assets/load.button';
 import Sound from 'react-native-sound';
+import LineHeader from '../../navigation/LineHeader';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -26,6 +32,8 @@ export default function LineWordGesture({navigation}: any) {
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
   const [chapter, setСhapter] = useMMKVString('@chapter');
   const [level, setLevel] = useMMKVString('@level');
+  const [levelCount, setLevelCount] = useMMKVNumber('@levelCount');
+  const [soundButton] = useMMKVBoolean('@sound');
 
   const [label, showLabel] = useState(false);
 
@@ -43,15 +51,18 @@ export default function LineWordGesture({navigation}: any) {
         setLevel('1');
       } else {
         setLevel((nLevel + 1).toString());
+        setLevelCount(levelCount! + 1);
       }
 
       setTimeout(() => {
-        sound.play();
+        soundButton ? sound.play() : null;
         showLabel(true);
       }, 1500);
 
       setTimeout(() => {
-        navigation.goBack();
+        showLabel(false);
+        navigation.navigate('LevelPassed');
+        // navigation.goBack();
       }, 3000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,12 +71,21 @@ export default function LineWordGesture({navigation}: any) {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={showGrid ? CustomImage.sky : CustomImage.milkPath}
+        source={showGrid ? CustomImage.sky : CustomImage.mp500}
+        resizeMode="cover"
         style={styles.backImage}>
+        <LineHeader navigation={navigation} goTo={levelCount} />
         {label ? (
           <View style={styles.lentaContainer}>
             <Image source={CustomImage.lenta} style={styles.lentaImage} />
           </View>
+        ) : nChapter === 0 && nLevel === 1 ? (
+          <>
+            <Text style={styles.firstText}>
+              Для выбора слова, соедините буквы движением пальца
+            </Text>
+            <LinewordGrid />
+          </>
         ) : (
           <LinewordGrid />
         )}
@@ -78,8 +98,10 @@ export default function LineWordGesture({navigation}: any) {
           <TouchableOpacity
             onPress={() => {
               setLevel('1');
-              setСhapter('2');
-              navigation.goBack();
+              setСhapter('0');
+              // navigation.navigate('StartGame');
+              navigation.navigate('LevelPassed');
+              // navigation.goBack();
             }}>
             <Image
               source={CustomButton.reset}
@@ -106,6 +128,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
+  },
+  firstText: {
+    textAlign: 'center',
+    fontSize: 24,
+    position: 'absolute',
+    marginTop: 40,
+    color: 'yellow',
+    fontWeight: '500',
   },
   lentaImage: {width: 300, height: 100, resizeMode: 'stretch'},
   backImage: {

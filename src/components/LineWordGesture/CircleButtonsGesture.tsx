@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Animated, PanResponder, StyleSheet, View} from 'react-native';
-import {useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import Svg, {Circle, Polyline} from 'react-native-svg';
 import {
   BUTTON_SIZE,
@@ -87,12 +87,6 @@ const GesturePath = ({region, path}: LineProps) => {
   );
 };
 
-// sound------------------------------------
-let sound = new Sound(require('../../assets/sound/re.mp3'));
-sound.setVolume(1);
-Sound.setCategory('Playback', true); //если false - остановит воспроизведение
-// sound------------------------------------
-
 let polyLine: LinePath[] = [];
 //
 
@@ -105,16 +99,7 @@ const soundList = [
   new Sound(require('../../assets/sound/lya.mp3')),
   new Sound(require('../../assets/sound/si.mp3')),
 ];
-// const soundList = [
-//   {key: 'sound1', file: require('../../assets/sound/do.mp3')},
-//   {key: 'sound2', file: require('../../assets/sound/re.mp3')},
-//   {key: 'sound3', file: require('../../assets/sound/mi.mp3')},
-//   {key: 'sound4', file: require('../../assets/sound/fa.mp3')},
-//   {key: 'sound5', file: require('../../assets/sound/sol.mp3')},
-//   {key: 'sound6', file: require('../../assets/sound/lya.mp3')},
-//   {key: 'sound7', file: require('../../assets/sound/si.mp3')},
-//   // добавьте здесь другие звуки, если нужно
-// ];
+Sound.setCategory('Playback', true);
 
 // ===================================================================================
 // type Props = {
@@ -126,10 +111,6 @@ export default function CircleButtonsGesture() {
 
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
-
-  const [unusedWords] = useMMKVObject<string[]>('@wordUnused');
-
-  const [wordBonus, setWordBonus] = useMMKVObject<string[]>('@wordBonus');
 
   const [buttonsState] = useMMKVObject<CircleButtonType[]>('@buttonsState');
 
@@ -144,9 +125,11 @@ export default function CircleButtonsGesture() {
   const [selLetterOrder, setSelLetterOrder] =
     useMMKVObject<number[]>('@arrayOrder');
 
+  const [soundButton] = useMMKVBoolean('@sound');
+
   const [animation] = useState(new Animated.Value(1));
 
-  const [sounds, setSounds] = useState(soundList);
+  const [sounds] = useState(soundList);
 
   useEffect(() => {
     const pulseButton = () => {
@@ -195,7 +178,7 @@ export default function CircleButtonsGesture() {
       let newWord: string[] = selLetter!;
       newWord.push(letter);
       setSelLetter(newWord);
-      sounds[index].play();
+      soundButton ? sounds[index].play() : null;
     }
   }
 
@@ -207,7 +190,7 @@ export default function CircleButtonsGesture() {
         newIndex.pop();
         setSelLetterOrder(newIndex);
         polyLine = setPolyLine(newIndex);
-        sounds[index].play();
+        soundButton ? sounds[index].play() : null;
       }
 
       let newWord: string[] = [];
@@ -269,30 +252,12 @@ export default function CircleButtonsGesture() {
               solvedGrid!,
               selLetter!.join(''),
             );
-            // setShowHint(true);
-            // fadeIn();
 
             if (result.solved) {
               storage.set('@solvedLineword', JSON.stringify(result.solvedGrid));
               storage.set('@lastWordPos', JSON.stringify(result.wordCoord));
-            } else {
-              // проверим есть ли такое слово в словаре. Если есть - бонус+
-              // Проходим по каждому слову в workWords
-              let bonus: string[] = wordBonus!;
-              let currentWord: string = selLetter!.join('');
-
-              // setShowHint(bonus.includes(currentWord));
-              // fadeIn();
-
-              // Проверяем, входит ли текущее слово в unusedWords
-              if (
-                unusedWords!.includes(currentWord) &&
-                !bonus.includes(currentWord)
-              ) {
-                bonus.push(currentWord);
-              }
-              setWordBonus(bonus);
             }
+
             storage.set('@currentWord', selLetter!.join(''));
           }
           setSelLetter([]);
@@ -300,7 +265,7 @@ export default function CircleButtonsGesture() {
           polyLine = [];
         },
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [
       addToSequence,
       buttonsState,
@@ -308,10 +273,7 @@ export default function CircleButtonsGesture() {
       selLetter,
       setSelLetter,
       setSelLetterOrder,
-      setWordBonus,
       solvedGrid,
-      unusedWords,
-      wordBonus,
     ],
   );
 

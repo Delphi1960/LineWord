@@ -4,14 +4,14 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {ThemeProvider} from '@rneui/themed';
-import CrossNavigate from './src/navigation/CrossNavigate';
+import CrosswordNavigate from './src/navigation/CrosswordNavigate';
 
 function App() {
   return (
     <ThemeProvider>
       <NavigationContainer>
         <SafeAreaProvider>
-          <CrossNavigate />
+          <CrosswordNavigate />
         </SafeAreaProvider>
       </NavigationContainer>
     </ThemeProvider>
