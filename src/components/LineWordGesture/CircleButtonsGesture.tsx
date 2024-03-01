@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: RADIUS * 2 + LINEWORD_CIRCLE_BUTTON_SIZE / 2,
+    height: RADIUS * 2 + LINEWORD_CIRCLE_BUTTON_SIZE,
     // backgroundColor: 'lightblue',
     alignItems: 'center',
   },

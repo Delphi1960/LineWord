@@ -4,6 +4,7 @@ import CustomButton from '../../assets/load.button';
 import InfoModal from '../supporting/InfoModal';
 import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import {Badge} from '@rneui/themed';
+import {Level} from '../../utils/Level';
 
 export default function LeftButton() {
   const [] = useState<string>('');
@@ -68,6 +69,19 @@ export default function LeftButton() {
       <TouchableOpacity onPress={handleShowGrid}>
         <Image
           source={CustomButton.grid}
+          style={styles.sideButtons}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          Level.clearLevel();
+          // navigation.navigate('MainScreen');
+          // navigation.goBack();
+        }}>
+        <Image
+          source={CustomButton.reset}
           style={styles.sideButtons}
           resizeMode="contain"
         />

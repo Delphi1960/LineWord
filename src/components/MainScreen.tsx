@@ -1,9 +1,12 @@
 import React from 'react';
 import {
   BackHandler,
+  Dimensions,
   Image,
   ImageBackground,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import CustomImage from '../assets/image';
@@ -12,15 +15,13 @@ import {storage} from '../utils/storage';
 import LineHeader from '../navigation/LineHeader';
 import {generateGrid} from '../utils/generateGrid';
 import {Level} from '../utils/Level';
+import CustomButton from '../assets/load.button';
 
 type Props = {
   navigation: any;
 };
 
 export default function MainScreen({navigation}: Props) {
-  // storage.contains('@chapter') ? null : storage.set('@chapter', '0');
-  // storage.contains('@level') ? null : storage.set('@level', '1');
-  // storage.contains('@levelCount') ? null : storage.set('@levelCount', 0);
   storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
   storage.contains('@freeHintCount') ? null : storage.set('@freeHintCount', 0);
   storage.contains('@mainWords')
@@ -40,54 +41,55 @@ export default function MainScreen({navigation}: Props) {
     <View style={styles.mainContainer}>
       <ImageBackground source={CustomImage.sky} style={styles.backImage}>
         <LineHeader navigation={navigation} goTo={''} />
-        <View style={styles.button}>
+        <View>
           <Image
-            source={CustomImage.LineWord2}
+            source={CustomImage.LineWord1}
             style={styles.imageStyle}
-            resizeMode="center"
+            resizeMode="contain"
           />
         </View>
 
         <View style={styles.button}>
-          <Button
-            // icon="exit-run"
-            mode="elevated"
-            uppercase={true}
-            labelStyle={styles.butText}
-            style={styles.butStyle}
-            buttonColor="blue"
-            textColor="yellow"
-            onPress={handlePress}>
-            Основная игра
-          </Button>
+          <TouchableOpacity style={styles.button} onPress={handlePress}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={CustomButton.blueButton}
+                style={styles.imageButton}
+                resizeMode="stretch"
+              />
+              <Text style={styles.textForButton}>Основная игра</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.button}>
-          <Button
-            // icon="exit-run"
-            mode="elevated"
-            uppercase={true}
-            labelStyle={styles.butText}
-            onPress={() => {}}
-            style={styles.butStyle}
-            buttonColor="blue"
-            textColor="yellow">
-            Игра на время
-          </Button>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('LevelPassed');
+            }}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={CustomButton.blueButton}
+                style={styles.imageButton}
+                resizeMode="stretch"
+              />
+              <Text style={styles.textForButton}>Игра на время</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.button}>
-          <Button
-            // icon="exit-run"
-            mode="elevated"
-            uppercase={true}
-            labelStyle={styles.butText}
-            onPress={() => {}}
-            style={styles.butStyle}
-            buttonColor="blue"
-            textColor="yellow">
-            Головоломка дня
-          </Button>
+          <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={CustomButton.blueButton}
+                style={styles.imageButton}
+                resizeMode="stretch"
+              />
+              <Text style={styles.textForButton}>Головоломка дня</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.exitButton}>
@@ -116,35 +118,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  startContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageStyle: {width: 300, height: 200},
+  imageStyle: {width: Dimensions.get('screen').width, height: 250},
   backImage: {
     width: '100%',
     height: '100%',
   },
-  buttonTextCont: {
+  buttonContainer: {
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignContent: 'center',
     alignItems: 'center',
   },
-  textButton: {
-    // flex: 1,
-    justifyContent: 'space-around',
+  imageButton: {
+    justifyContent: 'flex-start',
+    margin: 10,
+    width: 250,
+    height: 50,
   },
-  image: {
-    width: 300, // Set the width of your image
-    height: 110, // Set the height of your image
+  textForButton: {
+    marginTop: -50,
+    fontSize: 22,
+    fontWeight: '500',
+    color: 'yellow',
+    textAlign: 'center',
   },
+
   button: {
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    margin: 20,
+    margin: 10,
   },
   exitButton: {
     justifyContent: 'center',
@@ -152,5 +154,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   butText: {fontSize: 18},
-  butStyle: {width: 250},
+  butStyle: {width: 180},
 });

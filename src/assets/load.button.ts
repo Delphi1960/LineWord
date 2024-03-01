@@ -5,6 +5,7 @@ const CustomButton = {
   buttonOn: require('./button/buttonOn.png'),
   buttonGrey: require('./button/buttonGrey.png'),
   buttonYellow: require('./button/buttonYellow.png'),
+  buttonY: require('./button/buttonY.png'),
   blueOff: require('./button/blueOff.png'),
   blueOn: require('./button/blueOn.png'),
   reset: require('./button/reset.png'),
@@ -19,5 +20,7 @@ const CustomButton = {
   progress2: require('./button/progress2.png'),
   settingsBlue: require('./button/settingsBlue.png'),
   setBlue: require('./button/setBlue.png'),
+  blueButton: require('./button/blueButton.png'),
+  greenButton: require('./button/greenButton.png'),
 };
 export default CustomButton;

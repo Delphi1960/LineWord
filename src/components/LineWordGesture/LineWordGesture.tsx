@@ -4,18 +4,18 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
-  TouchableOpacity,
   Text,
+  Dimensions,
 } from 'react-native';
 import OpenTheWord from './OpenTheWord';
 import {LinewordGrid} from './LinewordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
 import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
-import CustomButton from '../../assets/load.button';
 import Sound from 'react-native-sound';
 import LineHeader from '../../navigation/LineHeader';
 import {Level} from '../../utils/Level';
+import GoogleReklama from '../GoogleReklama';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -42,13 +42,6 @@ export default function LineWordGesture({navigation}: any) {
 
   useEffect(() => {
     if (isCrosswordSolved) {
-      // if (nLevel === MAX_LEVEL) {
-      //   setСhapter((nChapter + 1).toString());
-      //   setLevel('1');
-      // } else {
-      //   setLevel((nLevel + 1).toString());
-      //   setLevelCount(levelCount! + 1);
-      // }
       Level.setLevel();
 
       setTimeout(() => {
@@ -66,45 +59,40 @@ export default function LineWordGesture({navigation}: any) {
   }, [isCrosswordSolved]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       <ImageBackground
         source={showGrid ? CustomImage.sky : CustomImage.mp500}
         resizeMode="cover"
         style={styles.backImage}>
         <LineHeader navigation={navigation} goTo={level.levelsСompleted} />
-        {label ? (
-          <View style={styles.lentaContainer}>
-            <Image source={CustomImage.lenta} style={styles.lentaImage} />
-          </View>
-        ) : level.currentChapter === 0 && level.currentLevel === 0 ? (
-          <>
-            <Text style={styles.firstText}>
-              Для выбора слова, соедините буквы движением пальца
-            </Text>
+
+        <View style={styles.gridContainer}>
+          {label ? (
+            <View style={styles.lentaContainer}>
+              <Image source={CustomImage.lenta} style={styles.lentaImage} />
+            </View>
+          ) : level.currentChapter === 0 && level.currentLevel === 0 ? (
+            <>
+              <Text style={styles.firstText}>
+                Для выбора слова, соедините буквы движением пальца
+              </Text>
+              <LinewordGrid />
+            </>
+          ) : (
             <LinewordGrid />
-          </>
-        ) : (
-          <LinewordGrid />
-        )}
+          )}
+        </View>
 
-        <OpenTheWord />
+        <View style={styles.textContainer}>
+          <OpenTheWord />
+        </View>
 
-        <CircleButtonsGesture />
-        <View style={styles.google}>
-          <Text>Здесь будет </Text>
-          <TouchableOpacity
-            onPress={() => {
-              Level.clearLevel();
-              navigation.navigate('MainScreen');
-              // navigation.goBack();
-            }}>
-            <Image
-              source={CustomButton.reset}
-              style={styles.sideButtons}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <Text> реклама от Google</Text>
+        <View style={styles.buttonContainer}>
+          <CircleButtonsGesture />
+        </View>
+
+        <View style={styles.banner}>
+          <GoogleReklama />
         </View>
       </ImageBackground>
     </View>
@@ -112,18 +100,39 @@ export default function LineWordGesture({navigation}: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  gridContainer: {
+    flex: 0.5,
+    // backgroundColor: 'grey',
+  },
+  textContainer: {
+    flex: 0.07,
+    // backgroundColor: 'yellow',
+    width: Dimensions.get('screen').width,
+  },
+  buttonContainer: {
+    flex: 0.4,
+    // backgroundColor: 'green',
+    width: Dimensions.get('screen').width,
+  },
+  banner: {
+    flex: 0.1,
+    width: Dimensions.get('screen').width,
+  },
+
   lentaContainer: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 0,
   },
+  lentaImage: {width: Dimensions.get('screen').width, resizeMode: 'contain'},
+
   firstText: {
     textAlign: 'center',
     fontSize: 24,
@@ -132,7 +141,6 @@ const styles = StyleSheet.create({
     color: 'yellow',
     fontWeight: '500',
   },
-  lentaImage: {width: 300, height: 100, resizeMode: 'stretch'},
   backImage: {
     width: '100%',
     height: '100%',
@@ -140,14 +148,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  google: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'yellow',
-    height: 80,
-    width: '100%',
-  },
   sideButtons: {
     width: 50,
     height: 50,

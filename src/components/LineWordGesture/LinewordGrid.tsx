@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   Animated,
+  Dimensions,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -70,8 +71,9 @@ export function LinewordGrid() {
     gridContainer: {
       // flex: 1,
       // flexDirection: 'column',
+      width: Dimensions.get('screen').width,
       alignItems: 'center',
-      marginTop: 10,
+      marginTop: 5,
     },
     row: {
       flexDirection: 'row',

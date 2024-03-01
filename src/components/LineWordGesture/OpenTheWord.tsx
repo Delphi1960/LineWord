@@ -5,7 +5,6 @@ import {
   Image,
   Text,
   StyleSheet,
-  Dimensions,
   Animated,
 } from 'react-native';
 import {useMMKVNumber, useMMKVObject, useMMKVString} from 'react-native-mmkv';
@@ -138,11 +137,10 @@ export default function OpenTheWord() {
 }
 const styles = StyleSheet.create({
   textContainer: {
-    // flex: 0.5,
     flexDirection: 'row',
     justifyContent: 'center',
     height: 50,
-    width: Dimensions.get('screen').width,
+    // width: Dimensions.get('screen').width,
     // borderWidth: 1,
   },
   hintView: {alignItems: 'center'},
