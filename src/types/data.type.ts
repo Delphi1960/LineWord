@@ -61,3 +61,10 @@ export interface CrosswordDensity {
   density: number;
   gridVariant: GridType;
 }
+
+export interface LevelsType {
+  currentLevel: number;
+  currentChapter: number;
+  levelsСompleted: number;
+  maxLevels: number;
+}

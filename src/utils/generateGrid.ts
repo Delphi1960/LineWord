@@ -2,14 +2,15 @@ import {WordsList} from '../assets/data/cleaned_nouns_ru';
 
 import {EMPTYCELL, GRIDSIZE} from '../types/constants';
 import {CrosswordDensity} from '../types/data.type';
+import {Level} from './Level';
 import {LinewordTools} from './LinewordTools';
 import {prepareTheGrid} from './prepareTheGrid';
 import {storage} from './storage';
 
 export function generateGrid() {
-  const chapter = storage.getString('@chapter');
+  const chapter = Level.getLevel();
   // число кнопок
-  const NUMBER_BUTTON = Number(chapter) + 3;
+  const NUMBER_BUTTON = chapter.currentChapter + 3;
 
   // =========================================================================================
   const grid = Array(GRIDSIZE)

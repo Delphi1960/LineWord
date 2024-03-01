@@ -11,15 +11,16 @@ import {Button} from 'react-native-paper';
 import {storage} from '../utils/storage';
 import LineHeader from '../navigation/LineHeader';
 import {generateGrid} from '../utils/generateGrid';
+import {Level} from '../utils/Level';
 
 type Props = {
   navigation: any;
 };
 
 export default function MainScreen({navigation}: Props) {
-  storage.contains('@chapter') ? null : storage.set('@chapter', '0');
-  storage.contains('@level') ? null : storage.set('@level', '1');
-  storage.contains('@levelCount') ? null : storage.set('@levelCount', 0);
+  // storage.contains('@chapter') ? null : storage.set('@chapter', '0');
+  // storage.contains('@level') ? null : storage.set('@level', '1');
+  // storage.contains('@levelCount') ? null : storage.set('@levelCount', 0);
   storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
   storage.contains('@freeHintCount') ? null : storage.set('@freeHintCount', 0);
   storage.contains('@mainWords')
@@ -29,7 +30,9 @@ export default function MainScreen({navigation}: Props) {
   storage.contains('@lineword') ? null : generateGrid();
 
   const handlePress = () => {
-    // generateGrid();
+    const level = Level.getLevel();
+    console.log(level);
+    level.currentChapter === 0 ? generateGrid() : null;
     navigation.navigate('LineWordGesture');
   };
 

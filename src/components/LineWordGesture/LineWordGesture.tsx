@@ -11,16 +11,11 @@ import OpenTheWord from './OpenTheWord';
 import {LinewordGrid} from './LinewordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
-import {
-  useMMKVBoolean,
-  useMMKVNumber,
-  useMMKVObject,
-  useMMKVString,
-} from 'react-native-mmkv';
-import {MAX_LEVEL} from '../../types/constants';
+import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import CustomButton from '../../assets/load.button';
 import Sound from 'react-native-sound';
 import LineHeader from '../../navigation/LineHeader';
+import {Level} from '../../utils/Level';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -30,29 +25,31 @@ Sound.setCategory('Playback', true); //если false - остановит во�
 export default function LineWordGesture({navigation}: any) {
   const [showGrid] = useMMKVBoolean('@showGrid');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
-  const [chapter, setСhapter] = useMMKVString('@chapter');
-  const [level, setLevel] = useMMKVString('@level');
-  const [levelCount, setLevelCount] = useMMKVNumber('@levelCount');
+  // const [chapter, setСhapter] = useMMKVString('@chapter');
+  // const [level, setLevel] = useMMKVString('@level');
+  // const [levelCount, setLevelCount] = useMMKVNumber('@levelCount');
   const [soundButton] = useMMKVBoolean('@sound');
 
   const [label, showLabel] = useState(false);
 
-  const nLevel = Number(level)!;
-  const nChapter = Number(chapter)!;
+  // const nLevel = Number(level)!;
+  // const nChapter = Number(chapter)!;
 
   const isCrosswordSolved = solvedGrid!.every(row =>
     row.every(cell => cell !== '0'),
   );
+  const level = Level.getLevel();
 
   useEffect(() => {
     if (isCrosswordSolved) {
-      if (nLevel === MAX_LEVEL) {
-        setСhapter((nChapter + 1).toString());
-        setLevel('1');
-      } else {
-        setLevel((nLevel + 1).toString());
-        setLevelCount(levelCount! + 1);
-      }
+      // if (nLevel === MAX_LEVEL) {
+      //   setСhapter((nChapter + 1).toString());
+      //   setLevel('1');
+      // } else {
+      //   setLevel((nLevel + 1).toString());
+      //   setLevelCount(levelCount! + 1);
+      // }
+      Level.setLevel();
 
       setTimeout(() => {
         soundButton ? sound.play() : null;
@@ -74,12 +71,12 @@ export default function LineWordGesture({navigation}: any) {
         source={showGrid ? CustomImage.sky : CustomImage.mp500}
         resizeMode="cover"
         style={styles.backImage}>
-        <LineHeader navigation={navigation} goTo={levelCount} />
+        <LineHeader navigation={navigation} goTo={level.levelsСompleted} />
         {label ? (
           <View style={styles.lentaContainer}>
             <Image source={CustomImage.lenta} style={styles.lentaImage} />
           </View>
-        ) : nChapter === 0 && nLevel === 1 ? (
+        ) : level.currentChapter === 0 && level.currentLevel === 0 ? (
           <>
             <Text style={styles.firstText}>
               Для выбора слова, соедините буквы движением пальца
@@ -97,10 +94,8 @@ export default function LineWordGesture({navigation}: any) {
           <Text>Здесь будет </Text>
           <TouchableOpacity
             onPress={() => {
-              setLevel('1');
-              setСhapter('0');
-              // navigation.navigate('StartGame');
-              navigation.navigate('LevelPassed');
+              Level.clearLevel();
+              navigation.navigate('MainScreen');
               // navigation.goBack();
             }}>
             <Image
