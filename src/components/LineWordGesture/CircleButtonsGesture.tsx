@@ -2,11 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Animated, PanResponder, StyleSheet, View} from 'react-native';
 import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import Svg, {Circle, Polyline} from 'react-native-svg';
-import {
-  BUTTON_SIZE,
-  LINEWORD_CIRCLE_BUTTON_SIZE,
-  RADIUS,
-} from '../../types/constants';
+import {CIRCLE_BUTTON_SIZE, RADIUS} from '../../types/constants';
 import {LinewordTools} from '../../utils/LinewordTools';
 import LeftButton from './LeftButton';
 import RightButton from './RightButton';
@@ -60,7 +56,7 @@ type LineProps = {
 
 const GesturePath = ({region, path}: LineProps) => {
   const points = path
-    .map(p => `${p.x + BUTTON_SIZE / 2},${p.y + BUTTON_SIZE / 2}`)
+    .map(p => `${p.x + CIRCLE_BUTTON_SIZE / 2},${p.y + CIRCLE_BUTTON_SIZE / 2}`)
     .join(' ');
   let cX = region.width / 2;
   let cY = region.height / 2 + region.pageY;
@@ -82,7 +78,7 @@ const GesturePath = ({region, path}: LineProps) => {
       />
       {/* <Circle cx={cX} cy={cY} r={5} fill="white" stroke={'blue'} /> */}
       {/*  */}
-      <Polyline points={points} fill="none" stroke={'blue'} strokeWidth="5" />
+      <Polyline points={points} fill="none" stroke={'blue'} strokeWidth="10" />
     </Svg>
   );
 };
@@ -212,9 +208,9 @@ export default function CircleButtonsGesture() {
 
       if (
         touchX >= x &&
-        touchX <= x + LINEWORD_CIRCLE_BUTTON_SIZE &&
+        touchX <= x + CIRCLE_BUTTON_SIZE &&
         touchY >= y &&
-        touchY <= y + LINEWORD_CIRCLE_BUTTON_SIZE
+        touchY <= y + CIRCLE_BUTTON_SIZE
       ) {
         return button;
       }
@@ -317,13 +313,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: RADIUS * 2 + LINEWORD_CIRCLE_BUTTON_SIZE,
+    height: RADIUS * 2 + CIRCLE_BUTTON_SIZE,
     // backgroundColor: 'lightblue',
     alignItems: 'center',
   },
   image: {
-    width: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the width of your image
-    height: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the height of your image
+    width: CIRCLE_BUTTON_SIZE, // Set the width of your image
+    height: CIRCLE_BUTTON_SIZE, // Set the height of your image
   },
   svg: {position: 'absolute', zIndex: 0},
 });

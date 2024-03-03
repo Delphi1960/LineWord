@@ -1,11 +1,17 @@
+//размер кнопок кроссворда
 export const LINEWORD_BUTTON_SIZE = 40;
-export const LINEWORD_CIRCLE_BUTTON_SIZE = 50;
-export const EMPTYCELL = '#';
-export const RADIUS = 90;
-export const BUTTON_SIZE = 60;
-export const MAX_CHAPTER = 2;
-// export const MAX_LEVEL_0 = 12;
 
+//заполнение кроссворда
+export const EMPTYCELL = '#';
+//размар кроссворда по горизонтали и по вертикали
 export const GRIDSIZE = 8;
 // export const SIZE_HORIZONTAL = GRIDSIZE;
 // export const SIZE_VERTICAL = GRIDSIZE;
+
+//размер круговых кнопок
+export const CIRCLE_BUTTON_SIZE = 50;
+//радиус круга кнопок
+export const RADIUS = 90;
+
+export const MAX_CHAPTER = 2;
+// export const MAX_LEVEL_0 = 12;

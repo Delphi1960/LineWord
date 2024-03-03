@@ -1,7 +1,7 @@
 import {LevelsType} from '../types/data.type';
 import {storage} from './storage';
 
-const minLevel = 1;
+const minChapter = 0;
 
 export namespace Level {
   export function clearLevel() {
@@ -11,7 +11,8 @@ export namespace Level {
   }
 
   export function getLevel(): LevelsType {
-    storage.contains('@chapter') ? null : storage.set('@chapter', 0);
+    const minLevel = minChapter === 0 ? 0 : 1;
+    storage.contains('@chapter') ? null : storage.set('@chapter', minChapter);
     storage.contains('@level') ? null : storage.set('@level', minLevel);
     storage.contains('@levelCount') ? null : storage.set('@levelCount', 0);
 
@@ -41,7 +42,8 @@ export namespace Level {
 
   export function setLevel() {
     const levels: LevelsType = getLevel();
-    console.log('@', levels);
+    const minLevel = minChapter === 0 ? 0 : 1;
+
     // три буквы
     if (levels.currentChapter === 0) {
       if (levels.currentLevel < levels.maxLevels - 1) {
@@ -58,6 +60,8 @@ export namespace Level {
       if (levels.currentLevel < levels.maxLevels) {
         storage.set('@level', levels.currentLevel + 1);
       } else {
+        console.log('-=====', {minChapter, minLevel});
+
         storage.set('@level', minLevel);
         storage.set('@chapter', levels.currentChapter + 1);
         storage.set('@mainWords', JSON.stringify([]));
@@ -78,7 +82,5 @@ export namespace Level {
     if (levels.currentChapter > 2) {
       clearLevel();
     }
-    const levels1: LevelsType = getLevel();
-    console.log('@', levels1);
   }
 }

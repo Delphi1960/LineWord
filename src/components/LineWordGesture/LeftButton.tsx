@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import InfoModal from '../supporting/InfoModal';
 import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
-import {Badge} from '@rneui/themed';
 import {Level} from '../../utils/Level';
+import ImageButton from '../supporting/ImageButton';
 
 export default function LeftButton() {
   const [] = useState<string>('');
@@ -31,20 +31,7 @@ export default function LeftButton() {
 
   return (
     <View style={styles.sideButtonsContainer}>
-      {/* <TouchableOpacity
-        onPress={() => {
-          generateGrid();
-          setWord('');
-          storage.set('@lineButtonText', '');
-        }}>
-        <Image
-          source={CustomButton.reset}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-      </TouchableOpacity> */}
-
-      <TouchableOpacity
+      <ImageButton
         onPress={() => {
           setModalProps({
             title: 'Ваши бонусы',
@@ -53,39 +40,29 @@ export default function LeftButton() {
             pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
           });
           setShow(true);
-        }}>
-        <Image
-          source={CustomButton.bonus}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-        <Badge
-          status="error"
-          value={bonusCount}
-          containerStyle={styles.badge}
-        />
-      </TouchableOpacity>
+        }}
+        image={CustomButton.bonus}
+        imageStyle={styles.sideButtons}
+        badge={true}
+        badgeValue={bonusCount}
+        badgeStyle={styles.badge}
+      />
 
-      <TouchableOpacity onPress={handleShowGrid}>
-        <Image
-          source={CustomButton.grid}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+      <ImageButton
+        onPress={handleShowGrid}
+        image={CustomButton.grid}
+        imageStyle={styles.sideButtons}
+      />
 
-      <TouchableOpacity
+      <ImageButton
         onPress={() => {
           Level.clearLevel();
           // navigation.navigate('MainScreen');
           // navigation.goBack();
-        }}>
-        <Image
-          source={CustomButton.reset}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+        }}
+        image={CustomButton.reset}
+        imageStyle={styles.sideButtons}
+      />
 
       {/* Модальное окно */}
       <InfoModal

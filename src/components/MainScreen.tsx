@@ -16,12 +16,13 @@ import LineHeader from '../navigation/LineHeader';
 import {generateGrid} from '../utils/generateGrid';
 import {Level} from '../utils/Level';
 import CustomButton from '../assets/load.button';
+import {TextStroke} from '../utils/TextStroke';
 
-type Props = {
-  navigation: any;
-};
+// type Props = {
+//   navigation: any;
+// };
 
-export default function MainScreen({navigation}: Props) {
+export default function MainScreen({navigation}: any) {
   storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
   storage.contains('@freeHintCount') ? null : storage.set('@freeHintCount', 0);
   storage.contains('@mainWords')
@@ -36,14 +37,13 @@ export default function MainScreen({navigation}: Props) {
     level.currentChapter === 0 ? generateGrid() : null;
     navigation.navigate('LineWordGesture');
   };
-
   return (
     <View style={styles.mainContainer}>
       <ImageBackground source={CustomImage.sky} style={styles.backImage}>
         <LineHeader navigation={navigation} goTo={''} />
         <View>
           <Image
-            source={CustomImage.LineWord1}
+            source={CustomImage.LineWord}
             style={styles.imageStyle}
             resizeMode="contain"
           />
@@ -57,7 +57,9 @@ export default function MainScreen({navigation}: Props) {
                 style={styles.imageButton}
                 resizeMode="stretch"
               />
-              <Text style={styles.textForButton}>Основная игра</Text>
+              <TextStroke stroke={0.5} color={'black'}>
+                <Text style={styles.textForButton}>Основная игра</Text>
+              </TextStroke>
             </View>
           </TouchableOpacity>
         </View>
@@ -74,7 +76,9 @@ export default function MainScreen({navigation}: Props) {
                 style={styles.imageButton}
                 resizeMode="stretch"
               />
-              <Text style={styles.textForButton}>Игра на время</Text>
+              <TextStroke stroke={0.5} color={'black'}>
+                <Text style={styles.textForButton}>Игра на время</Text>
+              </TextStroke>
             </View>
           </TouchableOpacity>
         </View>
@@ -87,7 +91,9 @@ export default function MainScreen({navigation}: Props) {
                 style={styles.imageButton}
                 resizeMode="stretch"
               />
-              <Text style={styles.textForButton}>Головоломка дня</Text>
+              <TextStroke stroke={0.5} color={'black'}>
+                <Text style={styles.textForButton}>Головоломка дня</Text>
+              </TextStroke>
             </View>
           </TouchableOpacity>
         </View>
@@ -146,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    margin: 10,
+    // margin: 5,
   },
   exitButton: {
     justifyContent: 'center',

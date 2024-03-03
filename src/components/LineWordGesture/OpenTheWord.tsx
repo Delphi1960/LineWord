@@ -12,6 +12,7 @@ import CustomButton from '../../assets/load.button';
 import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import {TextStroke} from '../../utils/TextStroke';
 import InfoModal from '../supporting/InfoModal';
+import {Level} from '../../utils/Level';
 
 export default function OpenTheWord() {
   const [selLetter] = useMMKVObject<string[]>('@arrayLetter');
@@ -26,6 +27,8 @@ export default function OpenTheWord() {
   const [currentWord] = useMMKVString('@currentWord');
 
   const [showHint, setShowHint] = useState(false);
+
+  const level = Level.getLevel();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -67,6 +70,7 @@ export default function OpenTheWord() {
         fadeIn();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWord, selLetter?.length]);
 
   // Show Modal dialog
@@ -124,7 +128,15 @@ export default function OpenTheWord() {
           </TouchableOpacity>
         ))
       )}
-
+      {selLetter?.length === 0 &&
+      level.currentChapter === 0 &&
+      level.currentLevel === 0 ? (
+        <TextStroke stroke={0.7} color={'black'}>
+          <Text style={styles.firstText}>
+            Для выбора слова, соедините буквы движением пальца
+          </Text>
+        </TextStroke>
+      ) : null}
       <InfoModal
         visible={show}
         title={modalProps.title}
@@ -160,5 +172,13 @@ const styles = StyleSheet.create({
     color: 'black', // Text color
     fontSize: 22, // Text size
     fontWeight: '700',
+  },
+  firstText: {
+    textAlign: 'center',
+    fontSize: 20,
+    // position: 'absolute',
+    // marginTop: 40,
+    color: 'lightyellow',
+    fontWeight: '500',
   },
 });

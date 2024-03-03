@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, Image, StyleSheet, Animated} from 'react-native';
 import CustomButton from '../../assets/load.button';
-import {LINEWORD_CIRCLE_BUTTON_SIZE} from '../../types/constants';
+import {CIRCLE_BUTTON_SIZE} from '../../types/constants';
 import {useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 import {CircleButtonType} from '../../types/data.type';
@@ -51,8 +51,8 @@ export default function CenterButton({buttons}: Props) {
 
   const styles = StyleSheet.create({
     image: {
-      width: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the width of your image
-      height: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the height of your image
+      width: CIRCLE_BUTTON_SIZE, // Set the width of your image
+      height: CIRCLE_BUTTON_SIZE, // Set the height of your image
     },
 
     centerButton: {

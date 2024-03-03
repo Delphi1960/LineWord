@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
-import {LINEWORD_CIRCLE_BUTTON_SIZE, RADIUS} from '../../types/constants';
+import {CIRCLE_BUTTON_SIZE, RADIUS} from '../../types/constants';
 import {useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: LINEWORD_CIRCLE_BUTTON_SIZE,
-    height: LINEWORD_CIRCLE_BUTTON_SIZE,
+    width: CIRCLE_BUTTON_SIZE,
+    height: CIRCLE_BUTTON_SIZE,
     borderWidth: 1,
     borderRadius: 30,
     justifyContent: 'center',
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   buttonText: {
-    fontSize: 30,
+    fontSize: 34,
     fontWeight: 'bold',
     color: 'yellow',
   },
   image: {
-    width: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the width of your image
-    height: LINEWORD_CIRCLE_BUTTON_SIZE, // Set the height of your image
+    width: CIRCLE_BUTTON_SIZE, // Set the width of your image
+    height: CIRCLE_BUTTON_SIZE, // Set the height of your image
   },
   imageBt: {
     position: 'absolute',

@@ -8,11 +8,19 @@ import {LetterPos} from '../../types/data.type';
 import Options from '../supporting/Options';
 import {Badge} from '@rneui/themed';
 import InfoModal from '../supporting/InfoModal';
+import ImageButton from '../supporting/ImageButton';
+import BonusModal from '../supporting/BonusModal';
 
 export default function RightButton() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
   const [freeHintCount, setFreeHintCount] = useMMKVNumber('@freeHintCount');
+
+  // Show Bonus dialog
+  const [showBonus, setShowBonus] = useState(false);
+  const [bonusProps, setBonusProps] = useState({
+    pressOk: () => {},
+  });
 
   // Show Modal dialog
   const [showInfo, setShowInfo] = useState(false);
@@ -22,6 +30,7 @@ export default function RightButton() {
     pressOk: () => {},
     pressCancel: () => {},
   });
+
   // Modal Open letter
   const showLetter = () => {
     setShowInfo(false);
@@ -44,64 +53,84 @@ export default function RightButton() {
   });
 
   return (
-    <View style={styles.sideButtonsContainer}>
-      <TouchableOpacity
-        onPress={() => {
-          setInfoProps({
-            title: 'Открыть одну букву?',
-            text:
-              freeHintCount! > 0
-                ? `У вас есть ${freeHintCount} бесплатных подсказок`
-                : 'У вас нет бесплатных подсказок.\nПридется посмотреть рекламу.',
-            pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
-            pressCancel: () => setShowInfo(false), // Передаем функцию для кнопки "Отмена"
-          });
-          setShowInfo(true);
-        }}>
-        <Image
-          source={CustomButton.openWord}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-        <Badge
-          status="error"
-          value={freeHintCount}
-          containerStyle={styles.badge}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setOptionsProps({
-            title: 'Настройки',
-            // text: '',
-            pressOk: () => setShowOptions(false), // Передаем функцию showLetter для кнопки "ОК"
-            // pressCancel: () => setShowOptions(false), // Передаем функцию для кнопки "Отмена"
-          });
-          setShowOptions(true);
-        }}>
-        <Image
-          source={CustomButton.setBlue}
-          style={styles.sideButtons}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+    <>
+      <View style={styles.sideButtonsContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            setInfoProps({
+              title: 'Открыть одну букву?',
+              text:
+                freeHintCount! > 0
+                  ? `У вас есть ${freeHintCount} бесплатных подсказок`
+                  : 'У вас нет бесплатных подсказок.\nПридется посмотреть рекламу.',
+              pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
+              pressCancel: () => setShowInfo(false), // Передаем функцию для кнопки "Отмена"
+            });
+            setShowInfo(true);
+          }}>
+          <Image
+            source={CustomButton.openWord}
+            style={styles.sideButtons}
+            resizeMode="contain"
+          />
+          <Badge
+            status="error"
+            value={freeHintCount}
+            containerStyle={styles.badge}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setOptionsProps({
+              title: 'Настройки',
+              // text: '',
+              pressOk: () => setShowOptions(false), // Передаем функцию showLetter для кнопки "ОК"
+              // pressCancel: () => setShowOptions(false), // Передаем функцию для кнопки "Отмена"
+            });
+            setShowOptions(true);
+          }}>
+          <Image
+            source={CustomButton.setBlue}
+            style={styles.sideButtons}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
 
-      <Options
-        visible={showOptions}
-        title={optionsProps.title}
-        // text={optionsProps.text}
-        pressOk={optionsProps.pressOk}
-        // pressCancel={optionsProps.pressCancel}
-      />
+        <ImageButton
+          onPress={() => {
+            setBonusProps({
+              pressOk: () => setShowBonus(false), // Передаем функцию showLetter для кнопки "ОК"
+            });
+            setShowBonus(true);
+          }}
+          image={CustomButton.blueButton}
+          imageStyle={styles.tempButtons}
+        />
 
-      <InfoModal
-        visible={showInfo}
-        title={infoProps.title}
-        text={infoProps.text}
-        pressOk={infoProps.pressOk}
-        pressCancel={infoProps.pressCancel}
+        <Options
+          visible={showOptions}
+          title={optionsProps.title}
+          // text={optionsProps.text}
+          pressOk={optionsProps.pressOk}
+          // pressCancel={optionsProps.pressCancel}
+        />
+
+        <InfoModal
+          visible={showInfo}
+          title={infoProps.title}
+          text={infoProps.text}
+          pressOk={infoProps.pressOk}
+          pressCancel={infoProps.pressCancel}
+        />
+      </View>
+      <BonusModal
+        visible={showBonus}
+        press1={() => {
+          setShowBonus(!showBonus);
+        }}
+        press2={() => {}}
       />
-    </View>
+    </>
   );
 }
 
@@ -120,5 +149,14 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+
+  tempButtons: {
+    justifyContent: 'flex-start',
+    // backgroundColor: 'lightblue',
+    // margin: 10,
+    width: 80,
+    height: 80,
+  },
+
   badge: {position: 'absolute', top: 5, left: -10},
 });

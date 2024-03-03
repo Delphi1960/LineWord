@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ImageBackground,
   Image,
-  Text,
   Dimensions,
 } from 'react-native';
 import OpenTheWord from './OpenTheWord';
@@ -16,6 +15,7 @@ import Sound from 'react-native-sound';
 import LineHeader from '../../navigation/LineHeader';
 import {Level} from '../../utils/Level';
 import GoogleReklama from '../GoogleReklama';
+import BonusModal from '../supporting/BonusModal';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -25,20 +25,19 @@ Sound.setCategory('Playback', true); //если false - остановит во�
 export default function LineWordGesture({navigation}: any) {
   const [showGrid] = useMMKVBoolean('@showGrid');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
-  // const [chapter, setСhapter] = useMMKVString('@chapter');
-  // const [level, setLevel] = useMMKVString('@level');
-  // const [levelCount, setLevelCount] = useMMKVNumber('@levelCount');
+
   const [soundButton] = useMMKVBoolean('@sound');
 
   const [label, showLabel] = useState(false);
 
-  // const nLevel = Number(level)!;
-  // const nChapter = Number(chapter)!;
+  const [showBonus, setShowBonus] = useState(false);
+  // const [getBonus, setGetBonus] = useState(true);
 
   const isCrosswordSolved = solvedGrid!.every(row =>
     row.every(cell => cell !== '0'),
   );
   const level = Level.getLevel();
+  // let levelCount = level.levelsСompleted;
 
   useEffect(() => {
     if (isCrosswordSolved) {
@@ -58,10 +57,40 @@ export default function LineWordGesture({navigation}: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCrosswordSolved]);
 
+  // useEffect(() => {
+  //   if (level.levelsСompleted === 3 && !isCrosswordSolved) {
+  //     setShowBonus(true);
+  //   }
+  // }, [isCrosswordSolved, level]);
+
+  let imageName = CustomImage.chapter0;
+  switch (level.currentChapter) {
+    case 0:
+      imageName = CustomImage.chapter0;
+      break;
+    case 1:
+      imageName = CustomImage.chapter1;
+      break;
+    case 2:
+      imageName = CustomImage.chapter2;
+      break;
+    case 3:
+      imageName = CustomImage.chapter3;
+      break;
+    case 4:
+      imageName = CustomImage.chapter4;
+      break;
+    // case 5:
+    //   imageName = CustomImage.chapter5;
+    //   break;
+    default:
+      imageName = CustomImage.chapter0;
+  }
+
   return (
     <View style={styles.mainContainer}>
       <ImageBackground
-        source={showGrid ? CustomImage.sky : CustomImage.mp500}
+        source={showGrid ? CustomImage.sky : imageName}
         resizeMode="cover"
         style={styles.backImage}>
         <LineHeader navigation={navigation} goTo={level.levelsСompleted} />
@@ -71,13 +100,6 @@ export default function LineWordGesture({navigation}: any) {
             <View style={styles.lentaContainer}>
               <Image source={CustomImage.lenta} style={styles.lentaImage} />
             </View>
-          ) : level.currentChapter === 0 && level.currentLevel === 0 ? (
-            <>
-              <Text style={styles.firstText}>
-                Для выбора слова, соедините буквы движением пальца
-              </Text>
-              <LinewordGrid />
-            </>
           ) : (
             <LinewordGrid />
           )}
@@ -95,6 +117,14 @@ export default function LineWordGesture({navigation}: any) {
           <GoogleReklama />
         </View>
       </ImageBackground>
+
+      <BonusModal
+        visible={showBonus}
+        press1={() => {
+          setShowBonus(!showBonus);
+        }}
+        press2={() => {}}
+      />
     </View>
   );
 }
@@ -108,6 +138,7 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     flex: 0.5,
+    alignItems: 'center',
     // backgroundColor: 'grey',
   },
   textContainer: {
@@ -123,6 +154,7 @@ const styles = StyleSheet.create({
   banner: {
     flex: 0.1,
     width: Dimensions.get('screen').width,
+    marginBottom: -10,
   },
 
   lentaContainer: {
@@ -133,14 +165,6 @@ const styles = StyleSheet.create({
   },
   lentaImage: {width: Dimensions.get('screen').width, resizeMode: 'contain'},
 
-  firstText: {
-    textAlign: 'center',
-    fontSize: 24,
-    position: 'absolute',
-    marginTop: 40,
-    color: 'yellow',
-    fontWeight: '500',
-  },
   backImage: {
     width: '100%',
     height: '100%',

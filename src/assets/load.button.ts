@@ -14,8 +14,6 @@ const CustomButton = {
   help: require('./button/help.png'),
   bonus: require('./button/bonus.png'),
   grid: require('./button/grid.png'),
-  label: require('./button/label.png'),
-  labelNext: require('./button/labelNext.png'),
   progress1: require('./button/progress1.png'),
   progress2: require('./button/progress2.png'),
   settingsBlue: require('./button/settingsBlue.png'),
