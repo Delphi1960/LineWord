@@ -68,9 +68,9 @@ const GesturePath = ({region, path}: LineProps) => {
       viewBox={`${region.pageX} ${region.pageY} ${region.width} ${region.height}`}>
       {/*  */}
       <Circle
-        cx={cX}
+        cx={cX - 5}
         cy={cY}
-        r={RADIUS}
+        r={RADIUS + CIRCLE_BUTTON_SIZE / 2 + 5}
         fill={'lightblue'}
         fillOpacity={0.3}
         stroke={'yellow'}
@@ -98,11 +98,11 @@ const soundList = [
 Sound.setCategory('Playback', true);
 
 // ===================================================================================
-// type Props = {
-//   navigation: any;
-// };
+type Props = {
+  navigation: any;
+};
 
-export default function CircleButtonsGesture() {
+export default function CircleButtonsGesture({navigation}: Props) {
   const [lettersButtons] = useMMKVObject<string[]>('@circleButton');
 
   const [grid] = useMMKVObject<string[][]>('@lineword');
@@ -289,7 +289,7 @@ export default function CircleButtonsGesture() {
       style={[styles.circleContainer]}
       {...panResponder.panHandlers}>
       {/* кнопки слева */}
-      <LeftButton />
+      <LeftButton navigation={navigation} />
 
       <View style={styles.svg}>
         <GesturePath region={buttonRegion} path={polyLine} />
@@ -301,7 +301,7 @@ export default function CircleButtonsGesture() {
       </Animated.View>
 
       {/* кнопки справа */}
-      <RightButton />
+      <RightButton navigation={navigation} />
     </View>
   );
 }
@@ -309,11 +309,11 @@ export default function CircleButtonsGesture() {
 const styles = StyleSheet.create({
   circleContainer: {
     // flex: 1,
-    marginTop: 10,
+    marginTop: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: RADIUS * 2 + CIRCLE_BUTTON_SIZE,
+    height: RADIUS * 2 + CIRCLE_BUTTON_SIZE + 10,
     // backgroundColor: 'lightblue',
     alignItems: 'center',
   },

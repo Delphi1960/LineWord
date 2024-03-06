@@ -70,6 +70,7 @@ export function generateGrid() {
       unusedWords.push(workWords[i]);
     }
   }
+  console.log(unusedWords);
 
   // SAVE ============================================================================
 

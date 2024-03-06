@@ -1,49 +1,12 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
-import {LinewordTools} from '../../utils/LinewordTools';
-import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
-import {storage} from '../../utils/storage';
-import {LetterPos} from '../../types/data.type';
 import Options from '../supporting/Options';
-import {Badge} from '@rneui/themed';
-import InfoModal from '../supporting/InfoModal';
-import ImageButton from '../supporting/ImageButton';
-import BonusModal from '../supporting/BonusModal';
+import GetBonus from '../supporting/GetBonus';
 
-export default function RightButton() {
-  const [grid] = useMMKVObject<string[][]>('@lineword');
-  const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
-  const [freeHintCount, setFreeHintCount] = useMMKVNumber('@freeHintCount');
+type Props = {navigation: any};
 
-  // Show Bonus dialog
-  const [showBonus, setShowBonus] = useState(false);
-  const [bonusProps, setBonusProps] = useState({
-    pressOk: () => {},
-  });
-
-  // Show Modal dialog
-  const [showInfo, setShowInfo] = useState(false);
-  const [infoProps, setInfoProps] = useState({
-    title: '',
-    text: '',
-    pressOk: () => {},
-    pressCancel: () => {},
-  });
-
-  // Modal Open letter
-  const showLetter = () => {
-    setShowInfo(false);
-    let letterPos: LetterPos[] = LinewordTools.markSolvedLetter(
-      grid!,
-      solvedGrid!,
-    )!;
-    storage.set('@lastWordPos', JSON.stringify(letterPos));
-    freeHintCount! > 0
-      ? setFreeHintCount(freeHintCount! - 1)
-      : setFreeHintCount(0);
-  };
-
+export default function RightButton({navigation}: Props) {
   const [showOptions, setShowOptions] = useState(false);
   const [optionsProps, setOptionsProps] = useState({
     title: '',
@@ -55,30 +18,8 @@ export default function RightButton() {
   return (
     <>
       <View style={styles.sideButtonsContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            setInfoProps({
-              title: 'Открыть одну букву?',
-              text:
-                freeHintCount! > 0
-                  ? `У вас есть ${freeHintCount} бесплатных подсказок`
-                  : 'У вас нет бесплатных подсказок.\nПридется посмотреть рекламу.',
-              pressOk: showLetter, // Передаем функцию showLetter для кнопки "ОК"
-              pressCancel: () => setShowInfo(false), // Передаем функцию для кнопки "Отмена"
-            });
-            setShowInfo(true);
-          }}>
-          <Image
-            source={CustomButton.openWord}
-            style={styles.sideButtons}
-            resizeMode="contain"
-          />
-          <Badge
-            status="error"
-            value={freeHintCount}
-            containerStyle={styles.badge}
-          />
-        </TouchableOpacity>
+        {/* <OpenLetterModal navigation={navigation} /> */}
+
         <TouchableOpacity
           onPress={() => {
             setOptionsProps({
@@ -96,16 +37,7 @@ export default function RightButton() {
           />
         </TouchableOpacity>
 
-        <ImageButton
-          onPress={() => {
-            setBonusProps({
-              pressOk: () => setShowBonus(false), // Передаем функцию showLetter для кнопки "ОК"
-            });
-            setShowBonus(true);
-          }}
-          image={CustomButton.blueButton}
-          imageStyle={styles.tempButtons}
-        />
+        <GetBonus navigation={navigation} />
 
         <Options
           visible={showOptions}
@@ -115,21 +47,21 @@ export default function RightButton() {
           // pressCancel={optionsProps.pressCancel}
         />
 
-        <InfoModal
+        {/* <InfoModal
           visible={showInfo}
           title={infoProps.title}
           text={infoProps.text}
           pressOk={infoProps.pressOk}
           pressCancel={infoProps.pressCancel}
-        />
+        /> */}
       </View>
-      <BonusModal
+      {/* <BonusModal
         visible={showBonus}
         press1={() => {
           setShowBonus(!showBonus);
         }}
         press2={() => {}}
-      />
+      /> */}
     </>
   );
 }
@@ -158,5 +90,5 @@ const styles = StyleSheet.create({
     height: 80,
   },
 
-  badge: {position: 'absolute', top: 5, left: -10},
+  badge: {position: 'absolute', top: 5, left: 0},
 });

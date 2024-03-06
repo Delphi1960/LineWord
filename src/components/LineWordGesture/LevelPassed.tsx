@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import GifImage from '../../assets/gif.image';
@@ -11,30 +11,35 @@ import {LevelsType} from '../../types/data.type';
 import CustomButton from '../../assets/load.button';
 import {getLevelPassedStyles} from '../../style/LevelPassedStyles';
 import {TextStroke} from '../../utils/TextStroke';
+import {useMMKVNumber} from 'react-native-mmkv';
+import {FREE_BONUS} from '../../types/constants';
+import GoogleBanner from '../reklama/GoogleBanner';
 
 //
 
 export default function LevelPassed({navigation}: any) {
   const styles = getLevelPassedStyles();
 
-  // const [showModal, setShowModal] = useState(false);
+  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
+  const [levelCount] = useMMKVNumber('@levelCount');
 
   const levels: LevelsType = Level.getLevel();
-  console.log({levels});
   const handlePress = () => {
     generateGrid();
-    // setShowModal(false);
     navigation.navigate('LineWordGesture');
   };
 
   const handlePressBonus = () => {
+    setBonusCount(bonusCount! + 2);
     navigation.navigate('GoogleInterstitial');
-    // setShowModal(false);
   };
-  // console.log({showModal});
-  // useEffect(() => {
-  //   setShowModal(true);
-  // }, []);
+
+  useEffect(() => {
+    console.log(levelCount);
+    if (levelCount! % FREE_BONUS === 0) {
+      handlePressBonus();
+    }
+  }, []);
 
   return (
     <View style={styles.mainContainer}>
@@ -47,7 +52,7 @@ export default function LevelPassed({navigation}: any) {
       </View>
 
       {/*  */}
-      {levels.currentChapter > 2 ? (
+      {levels.currentChapter > 4 ? (
         // КОНЕЦ ИГРЫ Запускаю салют
         <View style={styles.imageContainer}>
           <FastImage
@@ -83,7 +88,7 @@ export default function LevelPassed({navigation}: any) {
               source={CustomImage.levelPassed}
               resizeMode={FastImage.resizeMode.contain}
             />
-            <View style={{marginTop: 50}}>
+            <View style={styles.indent}>
               <Text style={styles.chapterStyle}>
                 ГЛАВА {levels.currentChapter}
               </Text>
@@ -136,6 +141,13 @@ export default function LevelPassed({navigation}: any) {
         </View>
         // </Modal>
       )}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+        }}>
+        <GoogleBanner />
+      </View>
     </View>
   );
 }

@@ -20,7 +20,7 @@ export default function ProgressBar({
 }: Props) {
   const styles = StyleSheet.create({
     container: {
-      // flex: 1,
+      flex: 1,
       flexDirection: 'column',
       justifyContent: 'center',
       margin: 30,
@@ -38,11 +38,11 @@ export default function ProgressBar({
       marginTop: -height,
       marginLeft: 10,
     },
-    text: {alignItems: 'center'},
+    text: {alignItems: 'center', margin: 20},
     textStyle: {
       textAlign: 'center',
       fontWeight: 'bold',
-      fontSize: 24,
+      fontSize: 18,
       color: 'yellow',
     },
   });
@@ -53,10 +53,10 @@ export default function ProgressBar({
         <TextStroke stroke={0.7} color={'black'}>
           <Text style={styles.textStyle}>{text}</Text>
         </TextStroke>
-        <View>
-          <Image source={CustomButton.progress1} style={styles.image} />
-          <Image source={CustomButton.progress2} style={styles.progress} />
-        </View>
+      </View>
+      <View>
+        <Image source={CustomButton.progress1} style={styles.image} />
+        <Image source={CustomButton.progress2} style={styles.progress} />
       </View>
     </View>
   );

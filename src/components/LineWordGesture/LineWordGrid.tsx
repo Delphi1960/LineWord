@@ -9,24 +9,33 @@ import {
 } from 'react-native';
 
 import {Text} from 'react-native';
-import {useMMKVBoolean, useMMKVObject, useMMKVString} from 'react-native-mmkv';
+import {
+  useMMKVBoolean,
+  useMMKVNumber,
+  useMMKVObject,
+  useMMKVString,
+} from 'react-native-mmkv';
 import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import CustomButton from '../../assets/load.button';
 import {LinewordTools} from '../../utils/LinewordTools';
 import {LetterPos} from '../../types/data.type';
 
-export function LinewordGrid() {
+export function LineWordGrid() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
 
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
 
   const [showGrid] = useMMKVBoolean('@showGrid');
 
+  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
+
   const [buttonAnimation] = useState(
     grid!.map(row => row.map(() => new Animated.Value(1))),
   );
   const [lastWord] = useMMKVString('@lastWord');
   const [coordWord, setCoordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
+
+  const [, setShowBonus] = useMMKVBoolean('@showBonus');
 
   function openLetter(rowIndex: number, colIndex: number) {
     LinewordTools.openLetter(rowIndex, colIndex, solvedGrid!);
@@ -139,8 +148,12 @@ export function LinewordGrid() {
                   key={colIndex}
                   style={styles.button}
                   onPress={() => {
-                    pulseButton(rowIndex, colIndex);
-                    openLetter(rowIndex, colIndex);
+                    bonusCount! >= 2
+                      ? (pulseButton(rowIndex, colIndex),
+                        setBonusCount(bonusCount! - 2),
+                        openLetter(rowIndex, colIndex),
+                        setShowBonus(false))
+                      : setShowBonus(true);
                   }}
                   disabled={false}>
                   <Animated.View

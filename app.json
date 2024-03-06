@@ -1,4 +1,8 @@
 {
   "name": "LineWord",
-  "displayName": "LineWord"
+  "displayName": "LineWord",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5224710872008842~3207440580",
+    "ios_app_id": "ca-app-pub-5224710872008842~3207440580"
+  }
 }

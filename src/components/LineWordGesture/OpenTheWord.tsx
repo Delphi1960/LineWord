@@ -11,7 +11,6 @@ import {useMMKVNumber, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 import CustomButton from '../../assets/load.button';
 import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import {TextStroke} from '../../utils/TextStroke';
-import InfoModal from '../supporting/InfoModal';
 import {Level} from '../../utils/Level';
 
 export default function OpenTheWord() {
@@ -22,7 +21,6 @@ export default function OpenTheWord() {
   const [wordBonus, setWordBonus] = useMMKVObject<string[]>('@wordBonus');
 
   const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
-  const [freeHintCount, setFreeHintCount] = useMMKVNumber('@freeHintCount');
 
   const [currentWord] = useMMKVString('@currentWord');
 
@@ -74,39 +72,40 @@ export default function OpenTheWord() {
   }, [currentWord, selLetter?.length]);
 
   // Show Modal dialog
-  const [show, setShow] = useState(false);
-  const [modalProps, setModalProps] = useState({
-    title: '',
-    text: '',
-    pressOk: () => {},
-    pressCancel: () => {},
-  });
-  // Modal show bonus
-  const showBonus = () => {
-    setShow(false);
-  };
+  // const [show, setShow] = useState(false);
+  // const [modalProps, setModalProps] = useState({
+  //   title: '',
+  //   text: '',
+  //   pressOk: () => {},
+  //   pressCancel: () => {},
+  // });
+  // // Modal show bonus
+  // const showBonus = () => {
+  //   setShow(false);
+  // };
 
-  useEffect(() => {
-    if (Number(bonusCount) === 10) {
-      setModalProps({
-        title: 'Поздравляем!',
-        text: 'Вы получили бесплатную подсказку.',
-        pressOk: showBonus, // Передаем функцию showLetter для кнопки "ОК"
-        pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
-      });
-      setShow(true);
-      setFreeHintCount(freeHintCount! + 1);
-      setBonusCount(0);
-      setWordBonus([]);
-    }
-  }, [
-    bonusCount,
-    freeHintCount,
-    setBonusCount,
-    setFreeHintCount,
-    setWordBonus,
-    wordBonus,
-  ]);
+  // // Если набрали 10 бонусов - получаем бесплантную подсказку
+  // useEffect(() => {
+  //   if (Number(bonusCount) === 10) {
+  //     setModalProps({
+  //       title: 'Поздравляем!',
+  //       text: 'Вы получили бесплатную подсказку.',
+  //       pressOk: showBonus, // Передаем функцию showLetter для кнопки "ОК"
+  //       pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
+  //     });
+  //     setShow(true);
+  //     setFreeHintCount(freeHintCount! + 1);
+  //     setBonusCount(0);
+  //     setWordBonus([]);
+  //   }
+  // }, [
+  //   bonusCount,
+  //   freeHintCount,
+  //   setBonusCount,
+  //   setFreeHintCount,
+  //   setWordBonus,
+  //   wordBonus,
+  // ]);
 
   return (
     <View style={styles.textContainer}>
@@ -133,17 +132,17 @@ export default function OpenTheWord() {
       level.currentLevel === 0 ? (
         <TextStroke stroke={0.7} color={'black'}>
           <Text style={styles.firstText}>
-            Для выбора слова, соедините буквы движением пальца
+            {'Для выбора слова, соедините \n буквы движением пальца'}
           </Text>
         </TextStroke>
       ) : null}
-      <InfoModal
+      {/* <InfoModal
         visible={show}
         title={modalProps.title}
         text={modalProps.text}
         pressOk={modalProps.pressOk}
         // pressCancel={modalProps.pressCancel}
-      />
+      /> */}
     </View>
   );
 }

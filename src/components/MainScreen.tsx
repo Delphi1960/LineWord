@@ -12,19 +12,19 @@ import {
 import CustomImage from '../assets/image';
 import {Button} from 'react-native-paper';
 import {storage} from '../utils/storage';
-import LineHeader from '../navigation/LineHeader';
 import {generateGrid} from '../utils/generateGrid';
 import {Level} from '../utils/Level';
 import CustomButton from '../assets/load.button';
 import {TextStroke} from '../utils/TextStroke';
+import GoogleBanner from './reklama/GoogleBanner';
 
 // type Props = {
 //   navigation: any;
 // };
 
 export default function MainScreen({navigation}: any) {
+  storage.contains('@showBonus') ? null : storage.set('@showBonus', false);
   storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
-  storage.contains('@freeHintCount') ? null : storage.set('@freeHintCount', 0);
   storage.contains('@mainWords')
     ? null
     : storage.set('@mainWords', JSON.stringify([]));
@@ -33,14 +33,14 @@ export default function MainScreen({navigation}: any) {
 
   const handlePress = () => {
     const level = Level.getLevel();
-    console.log(level);
+    // console.log(level);
     level.currentChapter === 0 ? generateGrid() : null;
     navigation.navigate('LineWordGesture');
   };
   return (
     <View style={styles.mainContainer}>
       <ImageBackground source={CustomImage.sky} style={styles.backImage}>
-        <LineHeader navigation={navigation} goTo={''} />
+        {/* <LineHeader navigation={navigation} goTo={''} /> */}
         <View>
           <Image
             source={CustomImage.LineWord}
@@ -84,7 +84,11 @@ export default function MainScreen({navigation}: any) {
         </View>
 
         <View style={styles.button}>
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('RollTheDice');
+            }}>
             <View style={styles.buttonContainer}>
               <Image
                 source={CustomButton.blueButton}
@@ -113,11 +117,19 @@ export default function MainScreen({navigation}: any) {
             Покинуть игру
           </Button>
         </View>
+        <View style={styles.banner}>
+          <GoogleBanner />
+        </View>
       </ImageBackground>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  banner: {
+    position: 'absolute',
+    bottom: 0,
+  },
+
   mainContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -141,7 +153,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   textForButton: {
-    marginTop: -50,
+    // marginTop: 0,
     fontSize: 22,
     fontWeight: '500',
     color: 'yellow',

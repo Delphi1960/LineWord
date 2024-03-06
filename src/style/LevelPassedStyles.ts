@@ -66,7 +66,7 @@ const getLevelPassedStyles = () =>
       height: 50,
     },
     textForButton: {
-      marginTop: -50,
+      // marginTop: -50,
       fontSize: 18,
       fontWeight: '500',
       color: 'yellow',
@@ -88,6 +88,7 @@ const getLevelPassedStyles = () =>
       position: 'relative',
       zIndex: 10,
     },
+    indent: {marginTop: 50},
   });
 
 export {getLevelPassedStyles};

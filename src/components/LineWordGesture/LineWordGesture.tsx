@@ -7,15 +7,16 @@ import {
   Dimensions,
 } from 'react-native';
 import OpenTheWord from './OpenTheWord';
-import {LinewordGrid} from './LinewordGrid';
+import {LineWordGrid} from './LineWordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
-import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import Sound from 'react-native-sound';
 import LineHeader from '../../navigation/LineHeader';
 import {Level} from '../../utils/Level';
-import GoogleReklama from '../GoogleReklama';
-import BonusModal from '../supporting/BonusModal';
+import GoogleBanner from '../reklama/GoogleBanner';
+import NotEnoughBonusModal from '../supporting/NotEnoughBonusModal';
+import GetBonus from '../supporting/GetBonus';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -26,12 +27,12 @@ export default function LineWordGesture({navigation}: any) {
   const [showGrid] = useMMKVBoolean('@showGrid');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
 
+  const [showBonus, setShowBonus] = useMMKVBoolean('@showBonus');
+  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
+
   const [soundButton] = useMMKVBoolean('@sound');
 
   const [label, showLabel] = useState(false);
-
-  const [showBonus, setShowBonus] = useState(false);
-  // const [getBonus, setGetBonus] = useState(true);
 
   const isCrosswordSolved = solvedGrid!.every(row =>
     row.every(cell => cell !== '0'),
@@ -94,36 +95,36 @@ export default function LineWordGesture({navigation}: any) {
         resizeMode="cover"
         style={styles.backImage}>
         <LineHeader navigation={navigation} goTo={level.levelsСompleted} />
-
         <View style={styles.gridContainer}>
           {label ? (
             <View style={styles.lentaContainer}>
               <Image source={CustomImage.lenta} style={styles.lentaImage} />
             </View>
           ) : (
-            <LinewordGrid />
+            <LineWordGrid />
           )}
         </View>
-
         <View style={styles.textContainer}>
           <OpenTheWord />
         </View>
-
         <View style={styles.buttonContainer}>
-          <CircleButtonsGesture />
+          <CircleButtonsGesture navigation={navigation} />
         </View>
-
         <View style={styles.banner}>
-          <GoogleReklama />
+          <GoogleBanner />
         </View>
       </ImageBackground>
 
-      <BonusModal
-        visible={showBonus}
+      <NotEnoughBonusModal
+        visible={showBonus!}
         press1={() => {
+          setBonusCount(bonusCount! + 2);
+          navigation.navigate('GoogleInterstitial');
           setShowBonus(!showBonus);
         }}
-        press2={() => {}}
+        press2={() => {
+          setShowBonus(!showBonus);
+        }}
       />
     </View>
   );
@@ -139,21 +140,20 @@ const styles = StyleSheet.create({
   gridContainer: {
     flex: 0.5,
     alignItems: 'center',
-    // backgroundColor: 'grey',
+    backgroundColor: 'grey',
   },
   textContainer: {
     flex: 0.07,
-    // backgroundColor: 'yellow',
+    backgroundColor: 'yellow',
     width: Dimensions.get('screen').width,
   },
   buttonContainer: {
     flex: 0.4,
-    // backgroundColor: 'green',
+    backgroundColor: 'green',
     width: Dimensions.get('screen').width,
   },
   banner: {
     flex: 0.1,
-    width: Dimensions.get('screen').width,
     marginBottom: -10,
   },
 
