@@ -16,7 +16,6 @@ import LineHeader from '../../navigation/LineHeader';
 import {Level} from '../../utils/Level';
 import GoogleBanner from '../reklama/GoogleBanner';
 import NotEnoughBonusModal from '../supporting/NotEnoughBonusModal';
-import GetBonus from '../supporting/GetBonus';
 
 // sound------------------------------------
 let sound = new Sound(require('../../assets/sound/melody.wav'));
@@ -140,16 +139,16 @@ const styles = StyleSheet.create({
   gridContainer: {
     flex: 0.5,
     alignItems: 'center',
-    backgroundColor: 'grey',
+    // backgroundColor: 'grey',
   },
   textContainer: {
-    flex: 0.07,
-    backgroundColor: 'yellow',
+    // flex: 0.07,
+    // backgroundColor: 'yellow',
     width: Dimensions.get('screen').width,
   },
   buttonContainer: {
     flex: 0.4,
-    backgroundColor: 'green',
+    // backgroundColor: 'green',
     width: Dimensions.get('screen').width,
   },
   banner: {

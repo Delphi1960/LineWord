@@ -63,7 +63,7 @@ export default function OpenLetterModal({navigation}: Props) {
               resizeMode={FastImage.resizeMode.contain}
             />
 
-            <View style={{justifyContent: 'flex-start', alignItems: 'center'}}>
+            <View style={styles.panelContainer}>
               <Text style={{fontSize: 24, color: 'black'}}>
                 Накоплено бонусов
               </Text>
@@ -80,27 +80,27 @@ export default function OpenLetterModal({navigation}: Props) {
                   1. Вы можете открыть случайную букву, использовав 1 бонус
                 </Text>
 
-                <View style={styles.button}>
-                  <TouchableOpacity
-                    disabled={bonusCount! > 0 ? false : true}
-                    style={styles.button}
-                    onPress={() => {
-                      showLetter();
-                    }}>
-                    <View style={styles.buttonContainer}>
-                      <Image
-                        source={CustomButton.blueButton}
-                        style={styles.imageButton}
-                        resizeMode="stretch"
-                      />
-                      <TextStroke stroke={0.5} color={'black'}>
-                        <Text style={styles.textForButton}>
-                          Случайная буква
-                        </Text>
-                      </TextStroke>
-                    </View>
-                  </TouchableOpacity>
-                </View>
+                <View style={styles.indent} />
+
+                <TouchableOpacity
+                  disabled={bonusCount! > 0 ? false : true}
+                  // style={styles.button}
+                  onPress={() => {
+                    showLetter();
+                  }}>
+                  <View style={styles.buttonContainer}>
+                    <Image
+                      source={CustomButton.blueButton}
+                      style={styles.imageButton}
+                      resizeMode="stretch"
+                    />
+                    <TextStroke stroke={0.5} color={'black'}>
+                      <Text style={styles.textForButton}>Случайная буква</Text>
+                    </TextStroke>
+                  </View>
+                </TouchableOpacity>
+
+                <View style={styles.indent} />
 
                 <Text style={styles.textPanel}>
                   2. Вы можете открыть любую букву, использовав 2 бонуса
@@ -114,44 +114,43 @@ export default function OpenLetterModal({navigation}: Props) {
                 </Text>
               </View>
 
-              <View style={styles.button}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    setBonusCount(bonusCount! + 2);
-                    navigation.navigate('GoogleInterstitial');
-                  }}>
-                  <View style={styles.buttonContainer}>
-                    <Image
-                      source={CustomButton.greenButton}
-                      style={styles.imageButton}
-                      resizeMode="stretch"
-                    />
-                    <TextStroke stroke={0.5} color={'black'}>
-                      <Text style={styles.textForButton}>Получить бонусы</Text>
-                    </TextStroke>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <View style={styles.indent} />
 
-              <View style={styles.button}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    setShowModal(false);
-                  }}>
-                  <View style={styles.buttonContainer}>
-                    <Image
-                      source={CustomButton.blueButton}
-                      style={styles.imageButton}
-                      resizeMode="stretch"
-                    />
-                    <TextStroke stroke={0.5} color={'black'}>
-                      <Text style={styles.textForButton}>Продолжить игру</Text>
-                    </TextStroke>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                // style={styles.button}
+                onPress={() => {
+                  setBonusCount(bonusCount! + 2);
+                  navigation.navigate('GoogleInterstitial');
+                }}>
+                <View style={styles.buttonContainer}>
+                  <Image
+                    source={CustomButton.greenButton}
+                    style={styles.imageButton}
+                    resizeMode="stretch"
+                  />
+                  <TextStroke stroke={0.5} color={'black'}>
+                    <Text style={styles.textForButton}>Получить бонусы</Text>
+                  </TextStroke>
+                </View>
+              </TouchableOpacity>
+
+              <View style={styles.indent} />
+
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModal(false);
+                }}>
+                <View style={styles.buttonContainer}>
+                  <Image
+                    source={CustomButton.blueButton}
+                    style={styles.imageButton}
+                    resizeMode="stretch"
+                  />
+                  <TextStroke stroke={0.5} color={'black'}>
+                    <Text style={styles.textForButton}>Продолжить игру</Text>
+                  </TextStroke>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -161,6 +160,7 @@ export default function OpenLetterModal({navigation}: Props) {
 }
 const styles = StyleSheet.create({
   badge: {position: 'absolute', top: 5, left: 50},
+
   sideButtons: {
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
@@ -191,31 +191,14 @@ const styles = StyleSheet.create({
   },
   mainImage: {width: 400, height: 500, position: 'absolute'},
 
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    margin: 5,
-    zIndex: 2,
-  },
+  panelContainer: {alignItems: 'center', marginTop: -40},
 
   textForButton: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '500',
     color: 'yellow',
     textAlign: 'center',
   },
-
-  text: {
-    fontSize: 60,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'white',
-  },
-  textPanel: {fontSize: 14, color: 'black'},
-
-  //   indent: {marginTop: 80},
-  //   indent1: {marginTop: 20},
   buttonContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -226,4 +209,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 40,
   },
+  textPanel: {fontSize: 14, color: 'black'},
+
+  indent: {margin: 5},
 });

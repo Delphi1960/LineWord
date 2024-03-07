@@ -46,7 +46,7 @@ const getNotEnoughBonusStyles = () =>
     },
     textForButton: {
       // marginTop: -40,
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: '500',
       color: 'yellow',
       textAlign: 'center',

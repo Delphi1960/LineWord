@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   BackHandler,
   Dimensions,
@@ -17,6 +17,7 @@ import {Level} from '../utils/Level';
 import CustomButton from '../assets/load.button';
 import {TextStroke} from '../utils/TextStroke';
 import GoogleBanner from './reklama/GoogleBanner';
+import RollTheDiceModal from './LineWordGesture/RollTheDiceModal';
 
 // type Props = {
 //   navigation: any;
@@ -31,11 +32,14 @@ export default function MainScreen({navigation}: any) {
 
   storage.contains('@lineword') ? null : generateGrid();
 
+  const [show, setshow] = useState(false);
+
   const handlePress = () => {
     const level = Level.getLevel();
     // console.log(level);
     level.currentChapter === 0 ? generateGrid() : null;
     navigation.navigate('LineWordGesture');
+    setshow(false);
   };
   return (
     <View style={styles.mainContainer}>
@@ -87,7 +91,8 @@ export default function MainScreen({navigation}: any) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('RollTheDice');
+              // navigation.navigate('RollTheDice');
+              setshow(true);
             }}>
             <View style={styles.buttonContainer}>
               <Image
@@ -117,6 +122,10 @@ export default function MainScreen({navigation}: any) {
             Покинуть игру
           </Button>
         </View>
+
+        <RollTheDiceModal visible={show} press1={handlePress} />
+
+        {/*  */}
         <View style={styles.banner}>
           <GoogleBanner />
         </View>
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
   },
   textForButton: {
     // marginTop: 0,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '500',
     color: 'yellow',
     textAlign: 'center',

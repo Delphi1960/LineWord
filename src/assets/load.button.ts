@@ -19,7 +19,9 @@ const CustomButton = {
   settingsBlue: require('./button/settingsBlue.png'),
   setBlue: require('./button/setBlue.png'),
   blueButton: require('./button/blueButton.png'),
+  blueButtonSmall: require('./button/blueButtonSmall.png'),
   greenButton: require('./button/greenButton.png'),
+  greenButtonSmall: require('./button/greenButtonSmall.png'),
   moneyButton: require('./button/moneyButton.png'),
   money: require('./button/money.png'),
 };

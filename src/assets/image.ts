@@ -6,6 +6,8 @@ const CustomImage = {
   panel: require('./image/panel.png'),
   bonusPanel: require('./image/bonusPanel.png'),
   notEnoughBonus: require('./image/notEnoughBonus.png'),
+  panelDice: require('./image/panelDice.png'),
+  panelGetBonus: require('./image/panelGetBonus.png'),
 
   chapter0: require('./image/chapter0.jpg'),
   chapter1: require('./image/chapter1.jpg'),

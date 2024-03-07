@@ -17,7 +17,6 @@ export default function LeftButton({navigation}: Props) {
 
   return (
     <View style={styles.sideButtonsContainer}>
-      {/* <BonusButton navigation={navigation} /> */}
       <OpenLetterModal navigation={navigation} />
 
       <ImageButton
