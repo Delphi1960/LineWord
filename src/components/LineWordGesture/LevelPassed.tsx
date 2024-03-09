@@ -14,6 +14,7 @@ import {TextStroke} from '../../utils/TextStroke';
 import {useMMKVNumber} from 'react-native-mmkv';
 import {FREE_BONUS} from '../../types/constants';
 import GoogleBanner from '../reklama/GoogleBanner';
+import LineHeader from '../../navigation/LineHeader';
 
 //
 
@@ -42,112 +43,124 @@ export default function LevelPassed({navigation}: any) {
   }, []);
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.backGif}>
-        <FastImage
-          style={styles.fastImage}
-          source={GifImage.stars}
-          resizeMode={FastImage.resizeMode.cover}
-        />
-      </View>
-
-      {/*  */}
-      {levels.currentChapter > 4 ? (
-        // КОНЕЦ ИГРЫ Запускаю салют
-        <View style={styles.imageContainer}>
+    <>
+      <View style={styles.mainContainer}>
+        <View style={styles.backGif}>
           <FastImage
-            style={[styles.salut]}
-            source={GifImage.salut}
-            resizeMode={FastImage.resizeMode.contain}
+            style={styles.fastImage}
+            source={GifImage.stars}
+            resizeMode={FastImage.resizeMode.cover}
           />
-
-          <View style={styles.exitButton}>
-            <Button
-              icon="exit-run"
-              mode="outlined"
-              // uppercase={true}
-              labelStyle={styles.butText}
-              style={styles.butStyle}
-              buttonColor="yellow"
-              textColor="darkblue"
-              onPress={() => {
-                Level.clearLevel();
-                navigation.navigate('MainScreen');
-              }}>
-              Назад
-            </Button>
-          </View>
         </View>
-      ) : (
-        // <Modal animationType="slide" transparent={true} visible={showModal}>
-        <View style={styles.modal}>
-          {/* // Прошли уровень. Продолжение игры. */}
+
+        {/*  */}
+        {levels.currentChapter > 4 ? (
+          // КОНЕЦ ИГРЫ Запускаю салют
           <View style={styles.imageContainer}>
             <FastImage
-              style={styles.mainImage}
-              source={CustomImage.levelPassed}
+              style={[styles.salut]}
+              source={GifImage.salut}
               resizeMode={FastImage.resizeMode.contain}
             />
-            <View style={styles.indent}>
-              <Text style={styles.chapterStyle}>
-                ГЛАВА {levels.currentChapter}
-              </Text>
-              <View style={styles.progress}>
-                <ProgressBar
-                  height={30}
-                  width={200}
-                  nLevel={levels.currentLevel}
-                  maxLevel={levels.maxLevels}
-                  text={`Уровень ${levels.currentLevel} из  ${levels.maxLevels}`}
-                />
-              </View>
 
-              <View style={styles.button}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handlePressBonus()}>
-                  <View style={styles.buttonContainer}>
-                    <Image
-                      source={CustomButton.greenButton}
-                      style={styles.imageButton}
-                      resizeMode="stretch"
-                    />
-                    <TextStroke stroke={0.5} color={'black'}>
-                      <Text style={styles.textForButton}>Получить бонусы</Text>
-                    </TextStroke>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.button}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handlePress()}>
-                  <View style={styles.buttonContainer}>
-                    <Image
-                      source={CustomButton.blueButton}
-                      style={styles.imageButton}
-                      resizeMode="stretch"
-                    />
-                    <TextStroke stroke={0.5} color={'black'}>
-                      <Text style={styles.textForButton}>Продолжить</Text>
-                    </TextStroke>
-                  </View>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.exitButton}>
+              <Button
+                icon="exit-run"
+                mode="outlined"
+                // uppercase={true}
+                labelStyle={styles.butText}
+                style={styles.butStyle}
+                buttonColor="yellow"
+                textColor="darkblue"
+                onPress={() => {
+                  Level.clearLevel();
+                  navigation.navigate('MainScreen');
+                }}>
+                Назад
+              </Button>
             </View>
           </View>
-          {/*  */}
+        ) : (
+          // <Modal animationType="slide" transparent={true} visible={showModal}>
+          <View style={styles.modal}>
+            {/* // Прошли уровень. Продолжение игры. */}
+            <View style={styles.imageContainer}>
+              <FastImage
+                style={styles.mainImage}
+                source={CustomImage.levelPassed}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+              <View style={styles.indent}>
+                <Text style={styles.chapterStyle}>
+                  ГЛАВА {levels.currentChapter}
+                </Text>
+                <View style={styles.progress}>
+                  <ProgressBar
+                    height={30}
+                    width={200}
+                    nLevel={levels.currentLevel}
+                    maxLevel={levels.maxLevels}
+                    text={`Уровень ${levels.currentLevel} из  ${levels.maxLevels}`}
+                  />
+                </View>
+
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handlePressBonus()}>
+                    <View style={styles.buttonContainer}>
+                      <Image
+                        source={CustomButton.greenButton}
+                        style={styles.imageButton}
+                        resizeMode="stretch"
+                      />
+                      <TextStroke stroke={0.5} color={'black'}>
+                        <Text style={styles.textForButton}>
+                          Получить бонусы
+                        </Text>
+                      </TextStroke>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => handlePress()}>
+                    <View style={styles.buttonContainer}>
+                      <Image
+                        source={CustomButton.blueButton}
+                        style={styles.imageButton}
+                        resizeMode="stretch"
+                      />
+                      <TextStroke stroke={0.5} color={'black'}>
+                        <Text style={styles.textForButton}>Продолжить</Text>
+                      </TextStroke>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            {/*  */}
+          </View>
+          // </Modal>
+        )}
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+          }}>
+          <LineHeader navigation={navigation} goTo={levels.levelsСompleted} />
         </View>
-        // </Modal>
-      )}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-        }}>
-        <GoogleBanner />
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+          }}>
+          <GoogleBanner />
+        </View>
       </View>
-    </View>
+    </>
   );
 }

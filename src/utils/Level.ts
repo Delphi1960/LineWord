@@ -60,8 +60,6 @@ export namespace Level {
       if (levels.currentLevel < levels.maxLevels) {
         storage.set('@level', levels.currentLevel + 1);
       } else {
-        console.log('-=====', {minChapter, minLevel});
-
         storage.set('@level', minLevel);
         storage.set('@chapter', levels.currentChapter + 1);
         storage.set('@mainWords', JSON.stringify([]));

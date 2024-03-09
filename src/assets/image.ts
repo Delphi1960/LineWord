@@ -8,6 +8,8 @@ const CustomImage = {
   notEnoughBonus: require('./image/notEnoughBonus.png'),
   panelDice: require('./image/panelDice.png'),
   panelGetBonus: require('./image/panelGetBonus.png'),
+  myBonus: require('./image/myBonus.png'),
+  logo: require('./image/logo.png'),
 
   chapter0: require('./image/chapter0.jpg'),
   chapter1: require('./image/chapter1.jpg'),

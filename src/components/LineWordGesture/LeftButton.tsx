@@ -28,8 +28,6 @@ export default function LeftButton({navigation}: Props) {
       <ImageButton
         onPress={() => {
           Level.clearLevel();
-          // navigation.navigate('MainScreen');
-          // navigation.goBack();
         }}
         image={CustomButton.reset}
         imageStyle={styles.sideButtons}

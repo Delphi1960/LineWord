@@ -24,5 +24,6 @@ const CustomButton = {
   greenButtonSmall: require('./button/greenButtonSmall.png'),
   moneyButton: require('./button/moneyButton.png'),
   money: require('./button/money.png'),
+  openBook: require('./button/openBook.png'),
 };
 export default CustomButton;

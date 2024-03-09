@@ -89,7 +89,6 @@ export default function RollTheDice({press1}: Props) {
           style={styles.button}
           onPress={() => {
             setBonusCount(bonusCount! + number!);
-            console.log({bonusCount, number}, bonusCount! + number!);
             press1();
           }}>
           <View style={styles.buttonContainer}>

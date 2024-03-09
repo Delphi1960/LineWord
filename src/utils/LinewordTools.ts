@@ -1,5 +1,6 @@
+import {WordsList} from '../assets/data/cleaned_nouns_ru';
 import {GRIDSIZE} from '../types/constants';
-import type {GridType, LetterPos} from '../types/data.type';
+import type {GridType, LetterPos, WordListType} from '../types/data.type';
 import {storage} from './storage';
 
 type SolvedGridType = {
@@ -184,6 +185,56 @@ export namespace LinewordTools {
     shuffledArray.sort(getRandomNumber);
 
     return shuffledArray;
+  }
+
+  // получить массив разгаданных слов с объяснениями
+  export function getSolvedWord(
+    grid: GridType,
+    solvedGrid: GridType,
+  ): WordListType[] {
+    const numRowsY = solvedGrid!.length;
+    const numColsX = solvedGrid![0].length;
+    let word: string = '';
+    const arrawWords: string[] = [];
+    // Поиск слова по горизонтали
+    for (let y = 0; y < numRowsY; y++) {
+      for (let x = 0; x <= numColsX; x++) {
+        if (solvedGrid![y][x] === '1') {
+          word = word + grid![y][x];
+        }
+        if (
+          solvedGrid![y][x] === '#' ||
+          solvedGrid![y][x] === '0' ||
+          x === GRIDSIZE - 1
+        ) {
+          if (word.length > 1) {
+            arrawWords.push(word);
+          }
+          word = '';
+        }
+      }
+    }
+    // Поиск слова по вертикали
+    for (let x = 0; x < numColsX; x++) {
+      for (let y = 0; y < numRowsY; y++) {
+        if (solvedGrid![y][x] === '1') {
+          word = word + grid![y][x];
+        }
+        if (
+          solvedGrid![y][x] === '#' ||
+          solvedGrid![y][x] === '0' ||
+          y === GRIDSIZE - 1
+        ) {
+          if (word.length > 1) {
+            arrawWords.push(word);
+          }
+          word = '';
+        }
+      }
+    }
+
+    // return arrawWords;
+    return WordsList.filter(item => arrawWords.includes(item.word));
   }
 
   // export function findWordCoordinates(

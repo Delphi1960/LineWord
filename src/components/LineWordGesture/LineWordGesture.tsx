@@ -37,7 +37,6 @@ export default function LineWordGesture({navigation}: any) {
     row.every(cell => cell !== '0'),
   );
   const level = Level.getLevel();
-  // let levelCount = level.levelsСompleted;
 
   useEffect(() => {
     if (isCrosswordSolved) {
@@ -51,7 +50,6 @@ export default function LineWordGesture({navigation}: any) {
       setTimeout(() => {
         showLabel(false);
         navigation.navigate('LevelPassed');
-        // navigation.goBack();
       }, 3000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

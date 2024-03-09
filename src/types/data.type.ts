@@ -68,3 +68,8 @@ export interface LevelsType {
   levelsСompleted: number;
   maxLevels: number;
 }
+
+export interface WordListType {
+  word: string;
+  hint: string;
+}

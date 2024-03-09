@@ -6,18 +6,18 @@ import LevelPassed from '../components/LineWordGesture/LevelPassed';
 import LineHeader from './LineHeader';
 import GoogleInterstitial from '../components/reklama/GoogleInterstitial';
 import GetBonus from '../components/supporting/GetBonus';
-import RollTheDice from '../components/LineWordGesture/RollTheDice';
 
 const CrosswordStack = createNativeStackNavigator();
 
 export default function CrosswordNavigate() {
   return (
     <CrosswordStack.Navigator
-      initialRouteName="Player"
+      initialRouteName="StartScreen"
       screenOptions={{
         headerShown: false,
         // header: mainHeader,
       }}>
+      {/* <CrosswordStack.Screen name="StartScreen" component={StartScreen} /> */}
       <CrosswordStack.Screen name="MainScreen" component={MainScreen} />
 
       <CrosswordStack.Screen name="LevelPassed" component={LevelPassed} />
@@ -34,7 +34,6 @@ export default function CrosswordNavigate() {
       <CrosswordStack.Screen name="LineHeader" component={LineHeader} />
 
       <CrosswordStack.Screen name="GetBonus" component={GetBonus} />
-      <CrosswordStack.Screen name="RollTheDice" component={RollTheDice} />
     </CrosswordStack.Navigator>
   );
 }

@@ -59,32 +59,30 @@ export default function OpenLetterModal({navigation}: Props) {
           <View style={styles.imageContainer}>
             <FastImage
               style={styles.mainImage}
-              source={CustomImage.panel}
+              source={CustomImage.myBonus}
               resizeMode={FastImage.resizeMode.contain}
             />
 
             <View style={styles.panelContainer}>
-              <Text style={{fontSize: 24, color: 'black'}}>
-                Накоплено бонусов
-              </Text>
-              <Text style={{fontSize: 30, color: 'red', fontWeight: 'bold'}}>
-                <Text style={{fontSize: 18, color: 'black'}}></Text>
-                {bonusCount}
-              </Text>
-              <View style={{width: 280}}>
+              <Text style={styles.textBonus}>{bonusCount}</Text>
+              <View style={styles.indent} />
+              <View style={styles.indent} />
+              <View style={styles.indent} />
+
+              <View style={styles.textWidth}>
                 <Text
                   style={[
                     styles.textPanel,
+                    // eslint-disable-next-line react-native/no-inline-styles
                     {color: bonusCount! > 0 ? 'black' : 'grey'},
                   ]}>
                   1. Вы можете открыть случайную букву, использовав 1 бонус
                 </Text>
 
-                <View style={styles.indent} />
+                {/* <View style={styles.indent} /> */}
 
                 <TouchableOpacity
                   disabled={bonusCount! > 0 ? false : true}
-                  // style={styles.button}
                   onPress={() => {
                     showLetter();
                   }}>
@@ -100,7 +98,7 @@ export default function OpenLetterModal({navigation}: Props) {
                   </View>
                 </TouchableOpacity>
 
-                <View style={styles.indent} />
+                {/* <View style={styles.indent} /> */}
 
                 <Text style={styles.textPanel}>
                   2. Вы можете открыть любую букву, использовав 2 бонуса
@@ -117,7 +115,6 @@ export default function OpenLetterModal({navigation}: Props) {
               <View style={styles.indent} />
 
               <TouchableOpacity
-                // style={styles.button}
                 onPress={() => {
                   setBonusCount(bonusCount! + 2);
                   navigation.navigate('GoogleInterstitial');
@@ -186,12 +183,15 @@ const styles = StyleSheet.create({
 
   imageContainer: {
     position: 'absolute',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  mainImage: {width: 400, height: 500, position: 'absolute'},
+  mainImage: {width: 400, height: 510, position: 'absolute'},
 
-  panelContainer: {alignItems: 'center', marginTop: -40},
+  panelContainer: {alignItems: 'center', marginTop: 95, marginLeft: -15},
+
+  textBonus: {fontSize: 34, color: 'red', fontWeight: 'bold'},
+  textWidth: {width: 280},
 
   textForButton: {
     fontSize: 18,

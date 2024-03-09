@@ -43,7 +43,7 @@ export default function MainScreen({navigation}: any) {
   };
   return (
     <View style={styles.mainContainer}>
-      <ImageBackground source={CustomImage.sky} style={styles.backImage}>
+      <ImageBackground source={CustomImage.chapter3} style={styles.backImage}>
         {/* <LineHeader navigation={navigation} goTo={''} /> */}
         <View>
           <Image
@@ -180,6 +180,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 50,
   },
-  butText: {fontSize: 18},
-  butStyle: {width: 180},
+  butText: {fontSize: 18, color: 'yellow', textAlign: 'center'},
+  butStyle: {width: 180, borderColor: 'white'},
 });

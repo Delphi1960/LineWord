@@ -3,6 +3,7 @@ import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import Options from '../supporting/Options';
 import GetBonus from '../supporting/GetBonus';
+import ExplainTheMeaning from './ExplainTheMeaning';
 
 type Props = {navigation: any};
 
@@ -18,7 +19,8 @@ export default function RightButton({navigation}: Props) {
   return (
     <>
       <View style={styles.sideButtonsContainer}>
-        {/* <OpenLetterModal navigation={navigation} /> */}
+        {/* OPEN BOOK */}
+        <ExplainTheMeaning navigation={navigation} />
 
         <TouchableOpacity
           onPress={() => {
@@ -26,7 +28,6 @@ export default function RightButton({navigation}: Props) {
               title: 'Настройки',
               // text: '',
               pressOk: () => setShowOptions(false), // Передаем функцию showLetter для кнопки "ОК"
-              // pressCancel: () => setShowOptions(false), // Передаем функцию для кнопки "Отмена"
             });
             setShowOptions(true);
           }}>
@@ -38,7 +39,6 @@ export default function RightButton({navigation}: Props) {
         </TouchableOpacity>
 
         <GetBonus navigation={navigation} />
-
         <Options
           visible={showOptions}
           title={optionsProps.title}
@@ -46,7 +46,6 @@ export default function RightButton({navigation}: Props) {
           pressOk={optionsProps.pressOk}
           // pressCancel={optionsProps.pressCancel}
         />
-
         {/* <InfoModal
           visible={showInfo}
           title={infoProps.title}

@@ -71,42 +71,6 @@ export default function OpenTheWord() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentWord, selLetter?.length]);
 
-  // Show Modal dialog
-  // const [show, setShow] = useState(false);
-  // const [modalProps, setModalProps] = useState({
-  //   title: '',
-  //   text: '',
-  //   pressOk: () => {},
-  //   pressCancel: () => {},
-  // });
-  // // Modal show bonus
-  // const showBonus = () => {
-  //   setShow(false);
-  // };
-
-  // // Если набрали 10 бонусов - получаем бесплантную подсказку
-  // useEffect(() => {
-  //   if (Number(bonusCount) === 10) {
-  //     setModalProps({
-  //       title: 'Поздравляем!',
-  //       text: 'Вы получили бесплатную подсказку.',
-  //       pressOk: showBonus, // Передаем функцию showLetter для кнопки "ОК"
-  //       pressCancel: () => setShow(false), // Передаем функцию для кнопки "Отмена"
-  //     });
-  //     setShow(true);
-  //     setFreeHintCount(freeHintCount! + 1);
-  //     setBonusCount(0);
-  //     setWordBonus([]);
-  //   }
-  // }, [
-  //   bonusCount,
-  //   freeHintCount,
-  //   setBonusCount,
-  //   setFreeHintCount,
-  //   setWordBonus,
-  //   wordBonus,
-  // ]);
-
   return (
     <View style={styles.textContainer}>
       {showHint ? (
