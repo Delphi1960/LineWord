@@ -26,7 +26,7 @@ export default function LevelPassed({navigation}: any) {
 
   const levels: LevelsType = Level.getLevel();
   const handlePress = () => {
-    generateGrid();
+    generateGrid(levels.currentChapter + 3);
     navigation.navigate('LineWordGesture');
   };
 
@@ -35,11 +35,13 @@ export default function LevelPassed({navigation}: any) {
     navigation.navigate('GoogleInterstitial');
   };
 
+  // Каждые FREE_BONUS уровней показываем кино
   useEffect(() => {
-    console.log(levelCount);
+    // console.log(levelCount);
     if (levelCount! % FREE_BONUS === 0) {
       handlePressBonus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -54,7 +56,7 @@ export default function LevelPassed({navigation}: any) {
         </View>
 
         {/*  */}
-        {levels.currentChapter > 4 ? (
+        {levels.currentChapter > 5 ? (
           // КОНЕЦ ИГРЫ Запускаю салют
           <View style={styles.imageContainer}>
             <FastImage
@@ -145,19 +147,11 @@ export default function LevelPassed({navigation}: any) {
           </View>
           // </Modal>
         )}
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-          }}>
+        <View style={styles.top}>
           <LineHeader navigation={navigation} goTo={levels.levelsСompleted} />
         </View>
 
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-          }}>
+        <View style={styles.bottom}>
           <GoogleBanner />
         </View>
       </View>

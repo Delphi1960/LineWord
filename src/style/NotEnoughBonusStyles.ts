@@ -24,7 +24,7 @@ const getNotEnoughBonusStyles = () =>
       justifyContent: 'center',
       alignItems: 'center',
     },
-    mainImage: {width: 300, height: 400, position: 'absolute'},
+    mainImage: {width: 400, height: 500, position: 'absolute'},
 
     button: {
       justifyContent: 'center',

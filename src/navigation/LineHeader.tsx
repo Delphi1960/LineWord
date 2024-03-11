@@ -11,23 +11,33 @@ import {
 import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import CustomButton from '../assets/load.button';
 import {LinewordTools} from '../utils/LinewordTools';
+import {WordListType} from '../types/data.type';
+import {WordsList} from '../assets/data/nouns_ru';
 import ExplainTheMeaning from '../components/LineWordGesture/ExplainTheMeaning';
 
 // type Props = {navigation: any; goTo: string};
 
 export default function LineHeader({navigation, goTo = ''}: any) {
   const [levelCount] = useMMKVNumber('@levelCount');
-  const [bookButton, setBookButton] = useState(false);
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
 
+  const [wordBonus] = useMMKVObject<string[]>('@wordBonus');
+
+  const [bookButton, setBookButton] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const [solvedWords, setSolvedWords] = useState<WordListType[]>([]);
+  const [unUsedWords, setUnUsedWords] = useState<WordListType[]>([]);
+
   useEffect(() => {
-    if (LinewordTools.getSolvedWord(grid!, solvedGrid!).length > 0) {
-      setBookButton(true);
+    setSolvedWords(LinewordTools.getSolvedWord(grid!, solvedGrid!));
+    solvedWords.length > 0 ? setBookButton(true) : setBookButton(false);
+    if (wordBonus!.length > 0) {
+      setUnUsedWords(WordsList.filter(item => wordBonus!.includes(item.word)));
     }
-  }, [grid, solvedGrid]);
+    // console.log(unUsedWords);
+  }, [grid, solvedGrid, solvedWords.length, wordBonus]);
 
   return (
     <View style={styles.header}>
@@ -47,23 +57,32 @@ export default function LineHeader({navigation, goTo = ''}: any) {
       ) : null}
 
       {bookButton ? (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            setShowModal(true);
-            console.log(showModal);
-            // navigation.navigate('MainScreen');
-            //   navigation.goBack();
-          }}>
-          <Image
-            source={CustomButton.openBook}
-            style={styles.sideButtons}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      ) : null}
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              setShowModal(true);
+              // console.log(showModal);
+              // navigation.navigate('MainScreen');
+              //   navigation.goBack();
+            }}>
+            <Image
+              source={CustomButton.openBook}
+              style={styles.sideButtons}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
 
-      <ExplainTheMeaning showModal={false} />
+          <ExplainTheMeaning
+            visible={showModal}
+            text={solvedWords}
+            wordBonus={unUsedWords}
+            pressOk={() => {
+              setShowModal(false);
+            }}
+          />
+        </View>
+      ) : null}
     </View>
   );
 }

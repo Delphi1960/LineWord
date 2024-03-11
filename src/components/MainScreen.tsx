@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BackHandler,
   Dimensions,
@@ -25,22 +25,53 @@ import RollTheDiceModal from './LineWordGesture/RollTheDiceModal';
 
 export default function MainScreen({navigation}: any) {
   storage.contains('@showBonus') ? null : storage.set('@showBonus', false);
-  storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
-  storage.contains('@mainWords')
+  storage.contains('@bonusCount')
+    ? null
+    : storage.contains('@mainWords')
     ? null
     : storage.set('@mainWords', JSON.stringify([]));
 
-  storage.contains('@lineword') ? null : generateGrid();
+  storage.contains('@lineword') ? null : generateGrid(3);
+  storage.contains('@lastTime')
+    ? null
+    : storage.set('@lastTime', new Date().toISOString());
 
   const [show, setshow] = useState(false);
+
+  // const [lastTime, setLastTime] = useState(''); // Состояние для хранения последнего времени
+  const millisecondsInDay = 24 * 60 * 60 * 1000; // Количество миллисекунд в сутках
+
+  useEffect(() => {
+    // При монтировании компонента загружаем последнее сохраненное время из MMKV
+    let lastTime = storage.getString('@lastTime');
+    if (Date.now() - new Date(lastTime!).getTime() >= millisecondsInDay) {
+      // Если прошли сутки или это первое открытие, сохраняем текущее время в MMKV и открываем модальное окно
+      storage.set('@lastTime', new Date().toISOString());
+      // Здесь можете открыть модальное окно
+      setshow(true);
+    } else {
+      // Если сутки еще не прошли, модальное окно не открываем
+      // console.log(
+      //   `Осталось ${
+      //     millisecondsInDay - (Date.now() - new Date(lastTime!).getTime())
+      //   } секунд до розыграша бонусов`,
+      // );
+    }
+  }, [millisecondsInDay]);
 
   const handlePress = () => {
     const level = Level.getLevel();
     // console.log(level);
-    level.currentChapter === 0 ? generateGrid() : null;
+    level.currentChapter === 0 ? generateGrid(level.currentChapter + 3) : null;
     navigation.navigate('LineWordGesture');
     setshow(false);
   };
+
+  const pazlePress = () => {
+    // generateGrid(7);
+    // navigation.navigate('LineWordGesture');
+  };
+
   return (
     <View style={styles.mainContainer}>
       <ImageBackground source={CustomImage.chapter3} style={styles.backImage}>
@@ -68,7 +99,7 @@ export default function MainScreen({navigation}: any) {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.button}>
+        {/* <View style={styles.button}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -87,13 +118,9 @@ export default function MainScreen({navigation}: any) {
           </TouchableOpacity>
         </View>
 
+        
         <View style={styles.button}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              // navigation.navigate('RollTheDice');
-              setshow(true);
-            }}>
+          <TouchableOpacity style={styles.button} onPress={pazlePress}>
             <View style={styles.buttonContainer}>
               <Image
                 source={CustomButton.blueButton}
@@ -105,7 +132,7 @@ export default function MainScreen({navigation}: any) {
               </TextStroke>
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={styles.exitButton}>
           <Button

@@ -14,7 +14,7 @@ export default function GetBonus({navigation}: Props) {
         setBonusCount(bonusCount! + 2);
         navigation.navigate('GoogleInterstitial');
       }}
-      image={CustomButton.money}
+      image={CustomButton.moneyButton}
       imageStyle={styles.tempButtons}
     />
   );
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     // backgroundColor: 'lightblue',
     // margin: 10,
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
   },
 });

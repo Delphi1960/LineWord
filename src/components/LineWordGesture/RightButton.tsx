@@ -3,7 +3,6 @@ import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import Options from '../supporting/Options';
 import GetBonus from '../supporting/GetBonus';
-import ExplainTheMeaning from './ExplainTheMeaning';
 
 type Props = {navigation: any};
 
@@ -19,9 +18,6 @@ export default function RightButton({navigation}: Props) {
   return (
     <>
       <View style={styles.sideButtonsContainer}>
-        {/* OPEN BOOK */}
-        <ExplainTheMeaning navigation={navigation} />
-
         <TouchableOpacity
           onPress={() => {
             setOptionsProps({

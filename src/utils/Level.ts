@@ -21,15 +21,23 @@ export namespace Level {
     let levelsСompleted = storage.getNumber('@levelCount')!;
     let maxLevels = 0;
 
+    //Число уровней для количества букв
     switch (currentChapter) {
+      // 3 буквы
       case 0:
-        maxLevels = 2;
-        break;
-      case 1:
         maxLevels = 3;
         break;
+      // 4 буквы
+      case 1:
+        maxLevels = 10;
+        break;
+      // 5 букв
       case 2:
-        maxLevels = 4;
+        maxLevels = 20;
+        break;
+      // 6 букв
+      case 3:
+        maxLevels = 30;
     }
 
     return {
@@ -65,6 +73,7 @@ export namespace Level {
         storage.set('@mainWords', JSON.stringify([]));
       }
     }
+
     //пять букв
     else if (levels.currentChapter === 2) {
       if (levels.currentLevel < levels.maxLevels) {
@@ -76,8 +85,19 @@ export namespace Level {
       }
     }
 
+    //шесть букв
+    else if (levels.currentChapter === 3) {
+      if (levels.currentLevel < levels.maxLevels) {
+        storage.set('@level', levels.currentLevel + 1);
+      } else {
+        storage.set('@level', minLevel);
+        storage.set('@chapter', levels.currentChapter + 1);
+        storage.set('@mainWords', JSON.stringify([]));
+      }
+    }
+
     storage.set('@levelCount', levels.levelsСompleted + 1);
-    if (levels.currentChapter > 2) {
+    if (levels.currentChapter > 3) {
       clearLevel();
     }
   }

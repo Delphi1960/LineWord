@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Image,
   Modal,
@@ -9,31 +9,27 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {useMMKVObject} from 'react-native-mmkv';
 import CustomButton from '../../assets/load.button';
 import CustomImage from '../../assets/image';
 import {TextStroke} from '../../utils/TextStroke';
 import {WordListType} from '../../types/data.type';
-import {LinewordTools} from '../../utils/LinewordTools';
 
-type Props = {showModal: boolean};
+type DlgProps = {
+  visible: boolean;
+  title?: string;
+  text?: WordListType[];
+  wordBonus?: WordListType[];
+  pressOk?: () => void;
+};
 
-export default function ExplainTheMeaning({showModal}: Props) {
-  const [grid] = useMMKVObject<string[][]>('@lineword');
-  const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
-
-  const [solvedWords, setSolvedWords] = useState<WordListType[]>([]);
-
-  // const pressBookButton = () => {
-  //   setShowModal(true);
-
-  //   setSolvedWords(LinewordTools.getSolvedWord(grid!, solvedGrid!));
-  // };
-
-  console.log({showModal});
-
+export default function ExplainTheMeaning({
+  visible,
+  text,
+  wordBonus,
+  pressOk,
+}: DlgProps) {
   return (
-    <Modal animationType="slide" transparent={true} visible={showModal}>
+    <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modal}>
         <View style={styles.imageContainer}>
           <FastImage
@@ -42,10 +38,22 @@ export default function ExplainTheMeaning({showModal}: Props) {
             resizeMode={FastImage.resizeMode.contain}
           />
           <View style={styles.panelContainer}>
+            <Text style={styles.headerStyle}>Словарь</Text>
+
             <ScrollView style={styles.scrollView}>
-              {solvedWords.map((item, index) => (
+              {text!.map((item, index) => (
                 <View key={index}>
-                  <Text style={styles.wordStyle}>{item.word} -</Text>
+                  <Text style={styles.wordStyle}>{item.word} </Text>
+                  <Text style={styles.hintStyle}>{item.hint}</Text>
+                  <View style={styles.indent} />
+                </View>
+              ))}
+            </ScrollView>
+            <Text style={styles.headerStyle}>Слова, не вошедшие в пазл</Text>
+            <ScrollView style={styles.scrollView}>
+              {wordBonus!.map((item, index) => (
+                <View key={index}>
+                  <Text style={styles.wordStyle}>{item.word} </Text>
                   <Text style={styles.hintStyle}>{item.hint}</Text>
                   <View style={styles.indent} />
                 </View>
@@ -54,10 +62,7 @@ export default function ExplainTheMeaning({showModal}: Props) {
 
             <View style={styles.indent} />
 
-            <TouchableOpacity
-              onPress={() => {
-                // setShowModal(false);
-              }}>
+            <TouchableOpacity onPress={pressOk}>
               <View style={styles.buttonContainer}>
                 <Image
                   source={CustomButton.blueButton}
@@ -96,10 +101,21 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  scrollView: {width: 280, height: 280},
+  scrollView: {
+    width: 280,
+    height: 140,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'blue',
+    padding: 5,
+  },
   mainImage: {width: 400, height: 500, position: 'absolute'},
 
-  panelContainer: {alignItems: 'center', marginTop: 95, marginLeft: -15},
+  panelContainer: {
+    alignItems: 'center',
+    marginTop: 55,
+    marginLeft: -15,
+  },
 
   textBonus: {fontSize: 34, color: 'red', fontWeight: 'bold'},
   textWidth: {width: 280},
@@ -122,6 +138,7 @@ const styles = StyleSheet.create({
   },
 
   wordStyle: {fontSize: 14, fontWeight: 'bold', color: 'black'},
+  headerStyle: {fontSize: 20, fontWeight: 'bold', color: 'black'},
   hintStyle: {
     marginTop: -5,
     fontSize: 14,

@@ -1,33 +1,34 @@
-import {WordsList} from '../assets/data/cleaned_nouns_ru';
+import {WordsList} from '../assets/data/nouns_ru';
 
 import {EMPTYCELL, GRIDSIZE} from '../types/constants';
 import {CrosswordDensity} from '../types/data.type';
-import {Level} from './Level';
+// import {Level} from './Level';
 import {LinewordTools} from './LinewordTools';
 import {prepareTheGrid} from './prepareTheGrid';
 import {storage} from './storage';
 
-export function generateGrid() {
-  const chapter = Level.getLevel();
-  // число кнопок
-  const NUMBER_BUTTON = chapter.currentChapter + 3;
+export function generateGrid(letterCount: number) {
+  // const chapter = Level.getLevel();
+  // // число кнопок
+  // const letterCount = chapter.currentChapter + 3;
 
   // =========================================================================================
   const grid = Array(GRIDSIZE)
     .fill(0)
     .map(() => Array(GRIDSIZE).fill('#'));
 
-  // const grid = [
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
-  // ];
+  const gridTest = [
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['Л', 'Е', 'С', '#', 'С', 'Т', 'О', 'Л'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+    ['#', '#', '#', '#', '#', '#', '#', '#'],
+  ];
 
+  // const words = prepareWords();
   // массив центральных слов
   const mainWords: string[] = JSON.parse(storage.getString('@mainWords')!);
 
@@ -35,15 +36,17 @@ export function generateGrid() {
   const newWords: string[] = WordsList.map(item => item.word);
 
   // Удаление повторов и перевод в верхний регистр
-  const wordsSet = [...new Set(newWords.map(word => word.toUpperCase()))];
+  //   `const wordsSet = [...new Set(newWords.map(word => word.toUpperCase()))];
 
-  //уберем использованные центральные слова из обработки
-  const words: string[] = wordsSet.filter(word => !mainWords.includes(word));
+  //уберем использованные центральные слова из обработки, чтобы не повторить кроссворд
+  // при переходе к новоку количеству букв список очищаем
+  //   return wordsSet.filter(word => !mainWords.includes(word));
+  const words = newWords.filter(word => !mainWords.includes(word));
 
-  // Получить центральное слово длиной NUMBER_BUTTON и список слов для сетки из букв центрального слова
+  // Получить центральное слово длиной letterCount и список слов для сетки из букв центрального слова
   const [randomWord, workWords] = prepareTheGrid.getWordListForGrid(
     words,
-    NUMBER_BUTTON,
+    letterCount,
   );
 
   let letterButtons: string[] = randomWord.split(''); //массив букв кнопок
@@ -59,7 +62,7 @@ export function generateGrid() {
 
   // выбираем лучшую сетку
   const bestGrid = prepareTheGrid.takeTheBestGrid(grids);
-  console.log(bestGrid.words);
+  // console.log(bestGrid.words);
   // Выделим слова не вошедшие в сетку
   const unusedWords = [];
   // Проходим по каждому слову в workWords(слова выбранные для сетки)
@@ -70,7 +73,7 @@ export function generateGrid() {
       unusedWords.push(workWords[i]);
     }
   }
-  console.log(unusedWords);
+  // console.log(unusedWords);
 
   // SAVE ============================================================================
 

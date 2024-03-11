@@ -89,6 +89,14 @@ const getLevelPassedStyles = () =>
       zIndex: 10,
     },
     indent: {marginTop: 50},
+    top: {
+      position: 'absolute',
+      top: 0,
+    },
+    bottom: {
+      position: 'absolute',
+      bottom: 0,
+    },
   });
 
 export {getLevelPassedStyles};

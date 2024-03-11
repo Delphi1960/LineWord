@@ -78,9 +78,9 @@ export default function LineWordGesture({navigation}: any) {
     case 4:
       imageName = CustomImage.chapter4;
       break;
-    // case 5:
-    //   imageName = CustomImage.chapter5;
-    //   break;
+    case 5:
+      imageName = CustomImage.chapter3;
+      break;
     default:
       imageName = CustomImage.chapter0;
   }

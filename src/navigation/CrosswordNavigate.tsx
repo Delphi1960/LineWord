@@ -6,6 +6,7 @@ import LevelPassed from '../components/LineWordGesture/LevelPassed';
 import LineHeader from './LineHeader';
 import GoogleInterstitial from '../components/reklama/GoogleInterstitial';
 import GetBonus from '../components/supporting/GetBonus';
+import InterstitialAds from '../components/reklama/InterstitialAds';
 
 const CrosswordStack = createNativeStackNavigator();
 
@@ -34,6 +35,11 @@ export default function CrosswordNavigate() {
       <CrosswordStack.Screen name="LineHeader" component={LineHeader} />
 
       <CrosswordStack.Screen name="GetBonus" component={GetBonus} />
+
+      <CrosswordStack.Screen
+        name="InterstitialAds"
+        component={InterstitialAds}
+      />
     </CrosswordStack.Navigator>
   );
 }
