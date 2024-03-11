@@ -5,14 +5,12 @@ import {
   ImageBackground,
   Image,
   Dimensions,
-  StatusBar,
-  SafeAreaView,
 } from 'react-native';
 import OpenTheWord from './OpenTheWord';
 import {LineWordGrid} from './LineWordGrid';
 import CircleButtonsGesture from './CircleButtonsGesture';
 import CustomImage from '../../assets/image';
-import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import Sound from 'react-native-sound';
 import LineHeader from '../../navigation/LineHeader';
 import {Level} from '../../utils/Level';
@@ -29,7 +27,6 @@ export default function LineWordGesture({navigation}: any) {
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
 
   const [showBonus, setShowBonus] = useMMKVBoolean('@showBonus');
-  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
 
   const [soundButton] = useMMKVBoolean('@sound');
 
@@ -57,12 +54,6 @@ export default function LineWordGesture({navigation}: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCrosswordSolved]);
 
-  // useEffect(() => {
-  //   if (level.levelsСompleted === 3 && !isCrosswordSolved) {
-  //     setShowBonus(true);
-  //   }
-  // }, [isCrosswordSolved, level]);
-
   let imageName = CustomImage.chapter0;
   switch (level.currentChapter) {
     case 0:
@@ -88,8 +79,7 @@ export default function LineWordGesture({navigation}: any) {
   }
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <StatusBar hidden />
+    <View style={styles.mainContainer}>
       <ImageBackground
         source={showGrid ? CustomImage.sky : imageName}
         resizeMode="cover"
@@ -110,12 +100,15 @@ export default function LineWordGesture({navigation}: any) {
         <View style={styles.buttonContainer}>
           <CircleButtonsGesture navigation={navigation} />
         </View>
+
+        <View style={styles.banner}>
+          <GoogleBanner />
+        </View>
       </ImageBackground>
 
       <NotEnoughBonusModal
         visible={showBonus!}
         press1={() => {
-          setBonusCount(bonusCount! + 2);
           navigation.navigate('GoogleInterstitial');
           setShowBonus(!showBonus);
         }}
@@ -123,10 +116,7 @@ export default function LineWordGesture({navigation}: any) {
           setShowBonus(!showBonus);
         }}
       />
-      <View style={styles.banner}>
-        <GoogleBanner />
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -134,27 +124,34 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   gridContainer: {
-    flex: 0.5,
+    position: 'relative',
+    // flex: 0.5,
     alignItems: 'center',
     // backgroundColor: 'grey',
   },
   textContainer: {
+    position: 'absolute',
+    top: 30,
     // flex: 0.07,
     // backgroundColor: 'yellow',
-    width: Dimensions.get('screen').width,
+    borderRadius: 10,
+    // width: Dimensions.get('screen').width,
   },
   buttonContainer: {
-    flex: 0.4,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    // flex: 0.45,
     // backgroundColor: 'green',
     width: Dimensions.get('screen').width,
   },
   banner: {
-    position: 'absolute',
-    bottom: 0,
+    height: 50,
+    // flex: 0.1,
+    // marginTop: 5,
   },
 
   lentaContainer: {

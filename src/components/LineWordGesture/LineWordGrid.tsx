@@ -78,8 +78,6 @@ export function LineWordGrid() {
 
   const styles = StyleSheet.create({
     gridContainer: {
-      // flex: 1,
-      // flexDirection: 'column',
       width: Dimensions.get('screen').width,
       alignItems: 'center',
       marginTop: 5,

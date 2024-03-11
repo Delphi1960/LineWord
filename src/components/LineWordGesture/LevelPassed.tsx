@@ -21,7 +21,6 @@ import LineHeader from '../../navigation/LineHeader';
 export default function LevelPassed({navigation}: any) {
   const styles = getLevelPassedStyles();
 
-  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
   const [levelCount] = useMMKVNumber('@levelCount');
 
   const levels: LevelsType = Level.getLevel();
@@ -31,7 +30,6 @@ export default function LevelPassed({navigation}: any) {
   };
 
   const handlePressBonus = () => {
-    setBonusCount(bonusCount! + 2);
     navigation.navigate('GoogleInterstitial');
   };
 
@@ -151,7 +149,10 @@ export default function LevelPassed({navigation}: any) {
           <LineHeader navigation={navigation} goTo={levels.levelsСompleted} />
         </View>
 
-        <View style={styles.bottom}>
+        <View style={styles.bannerTop}>
+          <GoogleBanner />
+        </View>
+        <View style={styles.bannerBottom}>
           <GoogleBanner />
         </View>
       </View>

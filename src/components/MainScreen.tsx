@@ -25,9 +25,9 @@ import RollTheDiceModal from './LineWordGesture/RollTheDiceModal';
 
 export default function MainScreen({navigation}: any) {
   storage.contains('@showBonus') ? null : storage.set('@showBonus', false);
-  storage.contains('@bonusCount')
-    ? null
-    : storage.contains('@mainWords')
+  storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
+
+  storage.contains('@mainWords')
     ? null
     : storage.set('@mainWords', JSON.stringify([]));
 
@@ -38,7 +38,6 @@ export default function MainScreen({navigation}: any) {
 
   const [show, setshow] = useState(false);
 
-  // const [lastTime, setLastTime] = useState(''); // Состояние для хранения последнего времени
   const millisecondsInDay = 24 * 60 * 60 * 1000; // Количество миллисекунд в сутках
 
   useEffect(() => {
@@ -67,10 +66,10 @@ export default function MainScreen({navigation}: any) {
     setshow(false);
   };
 
-  const pazlePress = () => {
-    // generateGrid(7);
-    // navigation.navigate('LineWordGesture');
-  };
+  // const pazlePress = () => {
+  //   // generateGrid(7);
+  //   // navigation.navigate('LineWordGesture');
+  // };
 
   return (
     <View style={styles.mainContainer}>
@@ -118,7 +117,7 @@ export default function MainScreen({navigation}: any) {
           </TouchableOpacity>
         </View>
 
-        
+
         <View style={styles.button}>
           <TouchableOpacity style={styles.button} onPress={pazlePress}>
             <View style={styles.buttonContainer}>

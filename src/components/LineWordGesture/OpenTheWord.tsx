@@ -100,13 +100,6 @@ export default function OpenTheWord() {
           </Text>
         </TextStroke>
       ) : null}
-      {/* <InfoModal
-        visible={show}
-        title={modalProps.title}
-        text={modalProps.text}
-        pressOk={modalProps.pressOk}
-        // pressCancel={modalProps.pressCancel}
-      /> */}
     </View>
   );
 }
@@ -114,15 +107,13 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    height: 50,
-    // width: Dimensions.get('screen').width,
-    // borderWidth: 1,
   },
   hintView: {alignItems: 'center'},
   hintText: {fontSize: 16, fontWeight: '700', color: 'yellow'},
   image: {
     width: LINEWORD_BUTTON_SIZE, // Set the width of your image
     height: LINEWORD_BUTTON_SIZE, // Set the height of your image
+    margin: 1,
   },
   button: {
     alignItems: 'center',
@@ -138,9 +129,7 @@ const styles = StyleSheet.create({
   },
   firstText: {
     textAlign: 'center',
-    fontSize: 20,
-    // position: 'absolute',
-    // marginTop: 40,
+    fontSize: 18,
     color: 'lightyellow',
     fontWeight: '500',
   },

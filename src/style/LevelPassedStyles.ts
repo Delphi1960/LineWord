@@ -93,7 +93,12 @@ const getLevelPassedStyles = () =>
       position: 'absolute',
       top: 0,
     },
-    bottom: {
+    bannerTop: {
+      position: 'absolute',
+      top: 0,
+      marginTop: 30,
+    },
+    bannerBottom: {
       position: 'absolute',
       bottom: 0,
     },

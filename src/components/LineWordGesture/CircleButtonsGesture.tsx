@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {Animated, PanResponder, StyleSheet, View} from 'react-native';
 import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import Svg, {Circle, Polyline} from 'react-native-svg';
-import {CIRCLE_BUTTON_SIZE, RADIUS} from '../../types/constants';
+import {
+  CIRCLE_BUTTON_HEIGHT,
+  CIRCLE_BUTTON_SIZE,
+  RADIUS,
+} from '../../types/constants';
 import {LinewordTools} from '../../utils/LinewordTools';
 import LeftButton from './LeftButton';
 import RightButton from './RightButton';
@@ -68,7 +72,7 @@ const GesturePath = ({region, path}: LineProps) => {
       viewBox={`${region.pageX} ${region.pageY} ${region.width} ${region.height}`}>
       {/*  */}
       <Circle
-        cx={cX - 5}
+        cx={cX}
         cy={cY}
         r={RADIUS + CIRCLE_BUTTON_SIZE / 2 + 5}
         fill={'lightblue'}
@@ -313,7 +317,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    height: RADIUS * 2 + CIRCLE_BUTTON_SIZE + 10,
+    height: CIRCLE_BUTTON_HEIGHT,
     // backgroundColor: 'lightblue',
     alignItems: 'center',
   },

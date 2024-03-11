@@ -12,6 +12,7 @@ export const GRIDSIZE = 8;
 export const CIRCLE_BUTTON_SIZE = 60;
 //радиус круга кнопок
 export const RADIUS = 90;
+export const CIRCLE_BUTTON_HEIGHT = RADIUS * 2 + CIRCLE_BUTTON_SIZE + 20;
 
 export const MAX_CHAPTER = 2;
 // export const MAX_LEVEL_0 = 12;

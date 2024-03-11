@@ -116,7 +116,6 @@ export default function OpenLetterModal({navigation}: Props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  setBonusCount(bonusCount! + 2);
                   navigation.navigate('GoogleInterstitial');
                 }}>
                 <View style={styles.buttonContainer}>

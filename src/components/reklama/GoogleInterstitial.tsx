@@ -1,40 +1,34 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {TestIds, useInterstitialAd} from 'react-native-google-mobile-ads';
+import {useMMKVNumber} from 'react-native-mmkv';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED
   : 'ca-app-pub-3940256099942544/5354046379';
 
-// const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-//   keywords: ['fashion', 'clothing'],
-// });
-
 export default function GoogleInterstitial({navigation}: any) {
+  const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
   const {isLoaded, isClosed, load, show} = useInterstitialAd(adUnitId);
 
   useEffect(() => {
     if (isLoaded) {
       show();
     }
-    // } else {
-    //   // No advert ready to show yet
-    //   navigation.navigate('LevelPassed');
-    // }
   }, [isLoaded, navigation, show]);
 
   useEffect(() => {
-    // Start loading the interstitial straight away
     load();
   }, [load]);
 
   useEffect(() => {
     if (isClosed) {
       // Action after the ad is closed
-      // navigation.navigate('LevelPassed');
+      setBonusCount(bonusCount! + 2);
       navigation.goBack();
     }
-  }, [isClosed, navigation]);
+  }, [isClosed]);
 
   return <View />;
 }
