@@ -5,6 +5,8 @@ import {
   ImageBackground,
   Image,
   Dimensions,
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import OpenTheWord from './OpenTheWord';
 import {LineWordGrid} from './LineWordGrid';
@@ -86,7 +88,8 @@ export default function LineWordGesture({navigation}: any) {
   }
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
+      <StatusBar hidden />
       <ImageBackground
         source={showGrid ? CustomImage.sky : imageName}
         resizeMode="cover"
@@ -107,9 +110,6 @@ export default function LineWordGesture({navigation}: any) {
         <View style={styles.buttonContainer}>
           <CircleButtonsGesture navigation={navigation} />
         </View>
-        <View style={styles.banner}>
-          <GoogleBanner />
-        </View>
       </ImageBackground>
 
       <NotEnoughBonusModal
@@ -123,7 +123,10 @@ export default function LineWordGesture({navigation}: any) {
           setShowBonus(!showBonus);
         }}
       />
-    </View>
+      <View style={styles.banner}>
+        <GoogleBanner />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -150,8 +153,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width,
   },
   banner: {
-    flex: 0.1,
-    marginBottom: -10,
+    position: 'absolute',
+    bottom: 0,
   },
 
   lentaContainer: {
