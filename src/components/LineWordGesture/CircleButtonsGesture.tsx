@@ -126,10 +126,9 @@ export default function CircleButtonsGesture({navigation}: Props) {
     useMMKVObject<number[]>('@arrayOrder');
 
   const [soundButton] = useMMKVBoolean('@sound');
+  const [sounds] = useState(soundList);
 
   const [animation] = useState(new Animated.Value(1));
-
-  const [sounds] = useState(soundList);
 
   useEffect(() => {
     const pulseButton = () => {

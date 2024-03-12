@@ -9,13 +9,17 @@ import {
 } from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {Badge} from '@rneui/base';
-import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import FastImage from 'react-native-fast-image';
 import CustomImage from '../../assets/image';
 import {TextStroke} from '../../utils/TextStroke';
 import {LetterPos} from '../../types/data.type';
 import {LinewordTools} from '../../utils/LinewordTools';
 import {storage} from '../../utils/storage';
+import Sound from 'react-native-sound';
+
+const soundList = new Sound(require('../../assets/sound/openLetter.mp3'));
+Sound.setCategory('Playback', true);
 
 type Props = {navigation: any};
 
@@ -24,6 +28,7 @@ export default function OpenLetterModal({navigation}: Props) {
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
   const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
+  const [soundButton] = useMMKVBoolean('@sound');
 
   // Modal Open letter
   const showLetter = () => {
@@ -85,6 +90,7 @@ export default function OpenLetterModal({navigation}: Props) {
                   disabled={bonusCount! > 0 ? false : true}
                   onPress={() => {
                     showLetter();
+                    soundButton ? soundList.play() : null;
                   }}>
                   <View style={styles.buttonContainer}>
                     <Image

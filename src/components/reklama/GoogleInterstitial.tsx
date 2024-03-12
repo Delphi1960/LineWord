@@ -2,7 +2,11 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {TestIds, useInterstitialAd} from 'react-native-google-mobile-ads';
-import {useMMKVNumber} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVNumber} from 'react-native-mmkv';
+import Sound from 'react-native-sound';
+
+const soundList = new Sound(require('../../assets/sound/addBonus.mp3'));
+Sound.setCategory('Playback', true);
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED
@@ -11,6 +15,7 @@ const adUnitId = __DEV__
 export default function GoogleInterstitial({navigation}: any) {
   const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
   const {isLoaded, isClosed, load, show} = useInterstitialAd(adUnitId);
+  const [soundButton] = useMMKVBoolean('@sound');
 
   useEffect(() => {
     if (isLoaded) {
@@ -27,6 +32,7 @@ export default function GoogleInterstitial({navigation}: any) {
       // Action after the ad is closed
       setBonusCount(bonusCount! + 2);
       navigation.goBack();
+      soundButton ? soundList.play() : null;
     }
   }, [isClosed]);
 

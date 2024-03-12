@@ -19,6 +19,10 @@ import {LINEWORD_BUTTON_SIZE} from '../../types/constants';
 import CustomButton from '../../assets/load.button';
 import {LinewordTools} from '../../utils/LinewordTools';
 import {LetterPos} from '../../types/data.type';
+import Sound from 'react-native-sound';
+
+const soundList = new Sound(require('../../assets/sound/openLetter.mp3'));
+Sound.setCategory('Playback', true);
 
 export function LineWordGrid() {
   const [grid] = useMMKVObject<string[][]>('@lineword');
@@ -36,6 +40,8 @@ export function LineWordGrid() {
   const [coordWord, setCoordWord] = useMMKVObject<LetterPos[]>('@lastWordPos');
 
   const [, setShowBonus] = useMMKVBoolean('@showBonus');
+
+  const [soundButton] = useMMKVBoolean('@sound');
 
   function openLetter(rowIndex: number, colIndex: number) {
     LinewordTools.openLetter(rowIndex, colIndex, solvedGrid!);
@@ -150,6 +156,7 @@ export function LineWordGrid() {
                       ? (pulseButton(rowIndex, colIndex),
                         setBonusCount(bonusCount! - 2),
                         openLetter(rowIndex, colIndex),
+                        soundButton ? soundList.play() : null,
                         setShowBonus(false))
                       : setShowBonus(true);
                   }}

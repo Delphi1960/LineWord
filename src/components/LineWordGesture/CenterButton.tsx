@@ -2,16 +2,21 @@ import React, {useState} from 'react';
 import {TouchableOpacity, Image, StyleSheet, Animated} from 'react-native';
 import CustomButton from '../../assets/load.button';
 import {CIRCLE_BUTTON_SIZE} from '../../types/constants';
-import {useMMKVObject} from 'react-native-mmkv';
+import {useMMKVBoolean, useMMKVObject} from 'react-native-mmkv';
 import {storage} from '../../utils/storage';
 import {CircleButtonType} from '../../types/data.type';
 import {shuffleLetters} from '../../utils/shuffleLetters';
+import Sound from 'react-native-sound';
+
+const soundList = new Sound(require('../../assets/sound/centerButton.mp3'));
+Sound.setCategory('Playback', true);
 
 type Props = {
   buttons: CircleButtonType[];
 };
 
 export default function CenterButton({buttons}: Props) {
+  const [soundButton] = useMMKVBoolean('@sound');
   const [, setLettersButtons] = useMMKVObject<string[]>('@circleButton');
   const [animation] = useState(new Animated.Value(1));
 
@@ -37,6 +42,7 @@ export default function CenterButton({buttons}: Props) {
 
   //onPress на центральную кнопку для перемешивания букв
   const handleCenterButton = () => {
+    soundButton ? soundList.play() : null;
     pulseButton();
     const timer = setInterval(() => {
       const shuffledButtons = shuffleLetters(buttons);
