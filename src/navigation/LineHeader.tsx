@@ -12,7 +12,7 @@ import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import CustomButton from '../assets/load.button';
 import {LinewordTools} from '../utils/LinewordTools';
 import {WordListType} from '../types/data.type';
-import {WordsList} from '../assets/data/nouns_ru';
+import {WordsList} from '../assets/data/combinedArray';
 import ExplainTheMeaning from '../components/LineWordGesture/ExplainTheMeaning';
 
 // type Props = {navigation: any; goTo: string};

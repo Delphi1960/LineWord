@@ -44,7 +44,7 @@ export default function ExplainTheMeaning({
               {text!.map((item, index) => (
                 <View key={index}>
                   <Text style={styles.wordStyle}>{item.word} </Text>
-                  <Text style={styles.hintStyle}>{item.hint}</Text>
+                  <Text style={styles.hintStyle}>{item.definition}</Text>
                   <View style={styles.indent} />
                 </View>
               ))}
@@ -54,7 +54,7 @@ export default function ExplainTheMeaning({
               {wordBonus!.map((item, index) => (
                 <View key={index}>
                   <Text style={styles.wordStyle}>{item.word} </Text>
-                  <Text style={styles.hintStyle}>{item.hint}</Text>
+                  <Text style={styles.hintStyle}>{item.definition}</Text>
                   <View style={styles.indent} />
                 </View>
               ))}

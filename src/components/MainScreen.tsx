@@ -98,27 +98,7 @@ export default function MainScreen({navigation}: any) {
           </TouchableOpacity>
         </View>
 
-        {/* <View style={styles.button}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate('LevelPassed');
-            }}>
-            <View style={styles.buttonContainer}>
-              <Image
-                source={CustomButton.blueButton}
-                style={styles.imageButton}
-                resizeMode="stretch"
-              />
-              <TextStroke stroke={0.5} color={'black'}>
-                <Text style={styles.textForButton}>Игра на время</Text>
-              </TextStroke>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-
-        <View style={styles.button}>
+        {/*        <View style={styles.button}>
           <TouchableOpacity style={styles.button} onPress={pazlePress}>
             <View style={styles.buttonContainer}>
               <Image

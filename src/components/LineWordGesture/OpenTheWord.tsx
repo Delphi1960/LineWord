@@ -83,7 +83,7 @@ export default function OpenTheWord() {
         selLetter!.map((item, ind) => (
           <TouchableOpacity key={ind} style={styles.button} disabled={true}>
             <Image
-              source={CustomButton.buttonGrey}
+              source={CustomButton.buttonBlue}
               style={styles.image}
               resizeMode="stretch"
             />
@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    backgroundColor: 'yellow',
+    // width: 200,
   },
   hintView: {alignItems: 'center'},
   hintText: {fontSize: 16, fontWeight: '700', color: 'yellow'},

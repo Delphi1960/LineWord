@@ -4,6 +4,8 @@ const CustomButton = {
   buttonOff: require('./button/buttonOff.png'),
   buttonOn: require('./button/buttonOn.png'),
   buttonGrey: require('./button/buttonGrey.png'),
+  buttonBlack: require('./button/buttonBlack.png'),
+  buttonBlue: require('./button/buttonBlue.png'),
   buttonYellow: require('./button/buttonYellow.png'),
   buttonY: require('./button/buttonY.png'),
   blueOff: require('./button/blueOff.png'),

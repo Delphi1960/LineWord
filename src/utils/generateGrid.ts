@@ -1,4 +1,4 @@
-import {WordsList} from '../assets/data/nouns_ru';
+import {WordsList} from '../assets/data/combinedArray';
 
 import {EMPTYCELL, GRIDSIZE} from '../types/constants';
 import {CrosswordDensity} from '../types/data.type';
@@ -17,16 +17,16 @@ export function generateGrid(letterCount: number) {
     .fill(0)
     .map(() => Array(GRIDSIZE).fill('#'));
 
-  const gridTest = [
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['Л', 'Е', 'С', '#', 'С', 'Т', 'О', 'Л'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-    ['#', '#', '#', '#', '#', '#', '#', '#'],
-  ];
+  // const gridTest = [
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['Л', 'Е', 'С', '#', 'С', 'Т', 'О', 'Л'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  //   ['#', '#', '#', '#', '#', '#', '#', '#'],
+  // ];
 
   // const words = prepareWords();
   // массив центральных слов
@@ -36,7 +36,7 @@ export function generateGrid(letterCount: number) {
   const newWords: string[] = WordsList.map(item => item.word);
 
   // Удаление повторов и перевод в верхний регистр
-  //   `const wordsSet = [...new Set(newWords.map(word => word.toUpperCase()))];
+  //   const wordsSet = [...new Set(newWords.map(word => word.toUpperCase()))];
 
   //уберем использованные центральные слова из обработки, чтобы не повторить кроссворд
   // при переходе к новоку количеству букв список очищаем

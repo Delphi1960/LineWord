@@ -1,4 +1,4 @@
-import {WordsList} from '../assets/data/nouns_ru';
+import {WordsList} from '../assets/data/combinedArray';
 import {GRIDSIZE} from '../types/constants';
 import type {GridType, LetterPos, WordListType} from '../types/data.type';
 import {storage} from './storage';

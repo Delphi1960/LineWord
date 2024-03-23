@@ -1,5 +1,5 @@
 // import {storage} from './storage';
-// import {WordsList} from '../assets/data/nouns_ru';
+// import {WordsList} from '../assets/data/combinedArray';
 
 // export default function prepareWords(): string[] {
 //   // массив центральных слов

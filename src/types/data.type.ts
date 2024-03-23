@@ -71,5 +71,5 @@ export interface LevelsType {
 
 export interface WordListType {
   word: string;
-  hint: string;
+  definition: string;
 }
