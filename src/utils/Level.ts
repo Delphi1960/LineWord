@@ -29,15 +29,15 @@ export namespace Level {
         break;
       // 4 буквы
       case 1:
-        maxLevels = 10;
+        maxLevels = 20;
         break;
       // 5 букв
       case 2:
-        maxLevels = 20;
+        maxLevels = 50;
         break;
       // 6 букв
       case 3:
-        maxLevels = 30;
+        maxLevels = 50;
     }
 
     return {

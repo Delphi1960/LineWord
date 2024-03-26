@@ -24,6 +24,7 @@ import RollTheDiceModal from './LineWordGesture/RollTheDiceModal';
 // };
 
 export default function MainScreen({navigation}: any) {
+  storage.contains('@wordCount') ? null : storage.set('@wordCount', 0);
   storage.contains('@showBonus') ? null : storage.set('@showBonus', false);
   storage.contains('@bonusCount') ? null : storage.set('@bonusCount', 0);
 
@@ -65,11 +66,6 @@ export default function MainScreen({navigation}: any) {
     navigation.navigate('LineWordGesture');
     setshow(false);
   };
-
-  // const pazlePress = () => {
-  //   // generateGrid(7);
-  //   // navigation.navigate('LineWordGesture');
-  // };
 
   return (
     <View style={styles.mainContainer}>

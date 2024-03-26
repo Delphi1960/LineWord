@@ -234,6 +234,11 @@ export namespace LinewordTools {
     }
 
     // return arrawWords;
+    // console.log(
+    //   WordsList.filter(item => arrawWords.includes(item.word)).map(
+    //     item => item.word,
+    //   ),
+    // );
     return WordsList.filter(item => arrawWords.includes(item.word));
   }
 

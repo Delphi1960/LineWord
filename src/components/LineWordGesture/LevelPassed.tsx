@@ -11,20 +11,38 @@ import {LevelsType} from '../../types/data.type';
 import CustomButton from '../../assets/load.button';
 import {getLevelPassedStyles} from '../../style/LevelPassedStyles';
 import {TextStroke} from '../../utils/TextStroke';
-import {useMMKVNumber} from 'react-native-mmkv';
+import {useMMKVNumber, useMMKVObject} from 'react-native-mmkv';
 import {FREE_BONUS} from '../../types/constants';
 import GoogleBanner from '../reklama/GoogleBanner';
 import LineHeader from '../../navigation/LineHeader';
+import {LinewordTools} from '../../utils/LinewordTools';
+import {WordsList} from '../../assets/data/combinedArray';
 
 //
 
 export default function LevelPassed({navigation}: any) {
   const styles = getLevelPassedStyles();
 
+  const [wordCount, setwordCount] = useMMKVNumber('@wordCount');
   const [levelCount] = useMMKVNumber('@levelCount');
+
+  const [grid] = useMMKVObject<string[][]>('@lineword');
+  const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
+  const [wordBonus] = useMMKVObject<string[]>('@wordBonus');
+
+  const solvedWordsLevel = LinewordTools.getSolvedWord(grid!, solvedGrid!);
+  const unUsedWordsLevel = WordsList.filter(item =>
+    wordBonus!.includes(item.word),
+  );
+
+  // const allSolvedWords =
+  //   wordCount! + solvedWordsLevel.length + unUsedWordsLevel.length;
 
   const levels: LevelsType = Level.getLevel();
   const handlePress = () => {
+    setwordCount(
+      wordCount! + solvedWordsLevel.length + unUsedWordsLevel.length,
+    );
     generateGrid(levels.currentChapter + 3);
     navigation.navigate('LineWordGesture');
   };
@@ -33,14 +51,17 @@ export default function LevelPassed({navigation}: any) {
     navigation.navigate('GoogleInterstitial');
   };
 
+  // useEffect(() => {
+  //   setwordCount();
+  // }, [solvedWordsLevel.length, unUsedWordsLevel.length, wordCount]);
+
   // Каждые FREE_BONUS уровней показываем кино
   useEffect(() => {
     // console.log(levelCount);
     if (levelCount! % FREE_BONUS === 0) {
       handlePressBonus();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [levelCount]);
 
   return (
     <>

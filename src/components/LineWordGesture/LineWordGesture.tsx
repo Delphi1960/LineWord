@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: 'absolute',
-    top: 30,
+    top: 40,
     // flex: 0.07,
     // backgroundColor: 'yellow',
     borderRadius: 10,

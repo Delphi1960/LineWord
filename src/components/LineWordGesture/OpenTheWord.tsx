@@ -22,7 +22,7 @@ export default function OpenTheWord() {
 
   const [bonusCount, setBonusCount] = useMMKVNumber('@bonusCount');
 
-  const [currentWord] = useMMKVString('@currentWord');
+  const [currentWord, setCurrentWord] = useMMKVString('@currentWord');
 
   const [showHint, setShowHint] = useState(false);
 
@@ -64,20 +64,33 @@ export default function OpenTheWord() {
         let numberBonusCount = bonusCount! + 1;
         setBonusCount(numberBonusCount);
       } else if (wordBonus!.includes(currentWord!)) {
+        // console.log(currentWord);
         setShowHint(true);
         fadeIn();
+        setCurrentWord('');
       }
+    } else {
+      setShowHint(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentWord, selLetter?.length]);
+  }, [
+    bonusCount,
+    currentWord,
+    fadeAnim,
+    selLetter?.length,
+    setBonusCount,
+    setCurrentWord,
+    setWordBonus,
+    unusedWords,
+    wordBonus,
+  ]);
 
   return (
     <View style={styles.textContainer}>
       {showHint ? (
         <Animated.View style={[styles.hintView, {opacity: fadeAnim}]}>
-          <TextStroke stroke={0.7} color={'black'}>
-            <Text style={styles.hintText}>Это слово уже есть!</Text>
-          </TextStroke>
+          {/* <TextStroke stroke={0.7} color={'black'}> */}
+          <Text style={styles.hintText}>Слово уже добавлено!</Text>
+          {/* </TextStroke> */}
         </Animated.View>
       ) : (
         selLetter!.map((item, ind) => (
@@ -107,11 +120,17 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
     // width: 200,
   },
-  hintView: {alignItems: 'center'},
-  hintText: {fontSize: 16, fontWeight: '700', color: 'yellow'},
+  hintView: {
+    backgroundColor: 'blue',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+  hintText: {fontSize: 18, fontWeight: '700', color: 'yellow'},
   image: {
     width: LINEWORD_BUTTON_SIZE, // Set the width of your image
     height: LINEWORD_BUTTON_SIZE, // Set the height of your image

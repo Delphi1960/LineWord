@@ -18,6 +18,7 @@ import ExplainTheMeaning from '../components/LineWordGesture/ExplainTheMeaning';
 // type Props = {navigation: any; goTo: string};
 
 export default function LineHeader({navigation, goTo = ''}: any) {
+  const [wordCount] = useMMKVNumber('@wordCount');
   const [levelCount] = useMMKVNumber('@levelCount');
   const [grid] = useMMKVObject<string[][]>('@lineword');
   const [solvedGrid] = useMMKVObject<string[][]>('@solvedLineword');
@@ -32,12 +33,13 @@ export default function LineHeader({navigation, goTo = ''}: any) {
 
   useEffect(() => {
     setSolvedWords(LinewordTools.getSolvedWord(grid!, solvedGrid!));
-    solvedWords.length > 0 ? setBookButton(true) : setBookButton(false);
-    if (wordBonus!.length > 0) {
-      setUnUsedWords(WordsList.filter(item => wordBonus!.includes(item.word)));
-    }
+    setUnUsedWords(WordsList.filter(item => wordBonus!.includes(item.word)));
+    solvedWords.length > 0 || unUsedWords.length > 0
+      ? setBookButton(true)
+      : setBookButton(false);
+
     // console.log(unUsedWords);
-  }, [grid, solvedGrid, solvedWords.length, wordBonus]);
+  }, [grid, solvedGrid, solvedWords.length, unUsedWords.length, wordBonus]);
 
   return (
     <View style={styles.header}>
@@ -53,7 +55,9 @@ export default function LineHeader({navigation, goTo = ''}: any) {
       ) : null}
 
       {goTo !== '' ? (
-        <Text style={styles.text}>Уровень {levelCount}</Text>
+        <Text style={styles.text}>
+          Уровень {levelCount} Слов {wordCount}
+        </Text>
       ) : null}
 
       {bookButton ? (
