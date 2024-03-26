@@ -126,19 +126,6 @@ export default function MainScreen({navigation}: any) {
               </TextStroke>
             </View>
           </TouchableOpacity>
-          {/* <Button
-            icon="exit-run"
-            mode="outlined"
-            // uppercase={true}
-            labelStyle={styles.butText}
-            style={styles.butStyle}
-            // buttonColor="blue"
-            textColor="darkblue"
-            onPress={() => {
-              BackHandler.exitApp();
-            }}>
-            Покинуть игру
-          </Button> */}
         </View>
 
         <RollTheDiceModal visible={show} press1={handlePress} />
