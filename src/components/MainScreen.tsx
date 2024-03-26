@@ -110,7 +110,23 @@ export default function MainScreen({navigation}: any) {
         </View> */}
 
         <View style={styles.exitButton}>
-          <Button
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              BackHandler.exitApp();
+            }}>
+            <View style={styles.buttonContainer}>
+              <Image
+                source={CustomButton.greenButton}
+                style={styles.imageButtonExit}
+                resizeMode="stretch"
+              />
+              <TextStroke stroke={0.5} color={'black'}>
+                <Text style={styles.textForButton}>Выйти из игры</Text>
+              </TextStroke>
+            </View>
+          </TouchableOpacity>
+          {/* <Button
             icon="exit-run"
             mode="outlined"
             // uppercase={true}
@@ -122,7 +138,7 @@ export default function MainScreen({navigation}: any) {
               BackHandler.exitApp();
             }}>
             Покинуть игру
-          </Button>
+          </Button> */}
         </View>
 
         <RollTheDiceModal visible={show} press1={handlePress} />
@@ -161,6 +177,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     margin: 10,
     width: 250,
+    height: 50,
+  },
+  imageButtonExit: {
+    justifyContent: 'flex-start',
+    margin: 10,
+    width: 180,
     height: 50,
   },
   textForButton: {
